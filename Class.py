@@ -1,3 +1,5 @@
+import heapq
+
 class Airline:
     def __init__(self,name,price,time,park=None):
         self.name,self.price,self.time,self.park = name,price,time,park
@@ -52,3 +54,15 @@ class StationNode:
         return self.name
     def __str__(self):
         return self.name+[str(e) for e in self.destination].__str__()
+
+class Queue:
+    def __init__(self):
+        self.queue = []
+        self.index = 0
+    def insert(self, item, priority):
+        heapq.heappush(self.queue,(priority,item))
+        self.index += 1
+    def remove(self):
+        return heapq.heappop(self.queue)[-1]
+    def is_empty(self):
+        return len(self.queue) == 0

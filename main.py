@@ -26,3 +26,15 @@ for e in List_Station["BKK"].getDestination():
     print(e)
     for a in e.getAirlines():
         print(a.getPrice())
+
+def uniform_cost_search(start,stop):
+    if start not in List_Station:
+        print("Error: key_node_start'%s' or key_node_goal'%s' not exists!!"%(start,stop))
+    else:
+        queue = Queue()
+        keySuccessors = List_Station[start].getDestination()
+
+        for keySuccessor in keySuccessors:
+            break
+
+uniform_cost_search("BKK","BKK")
