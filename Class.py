@@ -26,6 +26,8 @@ class DesNode:
         self.airlines.append(airline)
     def getAirlines(self):
         return self.airlines
+    def getCost(self):
+        return self.airlines[0].getPrice()
     def getName(self):
         return self.station.getName()
     def getStation(self):
@@ -60,7 +62,7 @@ class Queue:
         self.queue = []
         self.index = 0
     def insert(self, item, priority):
-        heapq.heappush(self.queue,(priority,item))
+        heapq.heappush(self.queue,(priority,self.index,item))
         self.index += 1
     def remove(self):
         return heapq.heappop(self.queue)[-1]
