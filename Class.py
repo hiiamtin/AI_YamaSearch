@@ -1,4 +1,5 @@
 import heapq
+import datetime
 
 class Airline:
     def __init__(self,name,price,time,park=None):
@@ -10,7 +11,8 @@ class Airline:
     def getPrice(self):
         return self.price
     def getTime(self):
-        return self.time
+        seconds = (self.time.hour * 60 + self.time.minute) * 60 + self.time.second
+        return seconds
     def setName(self,name):
         self.name = name
     def setPrice(self,price):
@@ -26,8 +28,21 @@ class DesNode:
         self.airlines.append(airline)
     def getAirlines(self):
         return self.airlines
-    def getCost(self):
-        return self.airlines[0].getPrice()
+    def getBestAirline(self,time=False):
+        air = self.airlines[0]
+        for e in self.airlines:
+            if not time:
+                if e.getPrice() < air.getPrice():
+                    air = e
+            else:
+                if e.getTime() < air.getTime():
+                    air = e
+        return air
+    def getCost(self,time):
+        if time:
+            return self.getBestAirline(time).getTime()
+        else:
+            return self.getBestAirline(time).getPrice()
     def getName(self):
         return self.station.getName()
     def getStation(self):
