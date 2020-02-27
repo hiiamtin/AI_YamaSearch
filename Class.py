@@ -61,10 +61,10 @@ class Queue:
     def __init__(self):
         self.queue = []
         self.index = 0
-    def insert(self, item, priority):
-        heapq.heappush(self.queue,(priority,self.index,item))
+    def insert(self, father, item, priority):
+        heapq.heappush(self.queue,(priority,self.index,father,item))
         self.index += 1
     def remove(self):
-        return heapq.heappop(self.queue)[-1]
+        return heapq.heappop(self.queue)[2:]
     def is_empty(self):
         return len(self.queue) == 0
