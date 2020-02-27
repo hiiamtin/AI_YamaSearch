@@ -21,3 +21,8 @@ for distro in distros_dict:
 print("prepare data complete!!\n\n")
 for e in List_Station:
     print(List_Station[e],"\n")
+
+for e in List_Station["BKK"].getDestination():
+    print(e)
+    for a in e.getAirlines():
+        print(a.getPrice())

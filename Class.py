@@ -46,7 +46,8 @@ class StationNode:
             self.destination.append(des)
             if not added:
                 des.getStation().addDestination(DesNode(self,des.getAirlines()),True)
-
+    def getDestination(self):
+        return self.destination
     def getName(self):
         return self.name
     def __str__(self):
