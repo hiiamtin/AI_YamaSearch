@@ -2,7 +2,7 @@ class Airline:
     def __init__(self,name,price,time,park=None):
         self.name,self.price,self.time,self.park = name,price,time,park
     def __str__(self):
-        return self.name+","+str(self.price)+","+str(self.time)+","+str(self.park)
+        return self.name+","+str(self.price)+","+str(self.time)
     def getName(self):
         return self.name
     def getPrice(self):
@@ -17,8 +17,9 @@ class Airline:
         self.time = time
 
 class DesNode:
-    def __init__(self,station,airlines):
+    def __init__(self,station,airlines=[]):
         self.station,self.airlines = station,airlines
+            
     def addAirlines(self,airline):
         self.airlines.append(airline)
     def getAirlines(self):
@@ -38,7 +39,7 @@ class StationNode:
         check = True
         for e in self.destination:
             if e.getName() == des.getName():
-                print("สถานีปลายทางนี้มีอยู่แล้ว โปรดใช้ addAirline(name,airline)"+e.getName())
+                print("สถานีปลายทางนี้มีอยู่แล้ว โปรดใช้ addAirline(name,airline)"+"//from station:"+e.getName()+",des:"+str(des)+"\n")
                 check = False
                 break
         if check :

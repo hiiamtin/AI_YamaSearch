@@ -1,12 +1,23 @@
 import datetime
 from Class import *
-BKK = StationNode("BKK",[])
-HKG = StationNode("HKG",[])
-ICN = StationNode("ICN",[])
-SFO = StationNode("SFO",[])
+import json
 
-BKK.addDestination(DesNode(HKG,[Airline("THAI",8846,datetime.time(2,45)),Airline("United",39852,datetime.time(12,20))]))
-BKK.addDestination(DesNode(ICN,[Airline("THAI2",8846,datetime.time(2,45))]))
-HKG.addDestination(DesNode(SFO,[Airline("United2",39852,datetime.time(12,20))]))
-print(BKK)
-print(HKG)
+with open('AI_YamaSearch/data.json', 'r') as f:
+    distros_dict = json.load(f)
+List_Station = {}
+for distro in distros_dict:
+    List_Station[distro] = StationNode(distro,[])
+
+for distro in distros_dict:
+    station = List_Station[distro]
+    for des in distros_dict[distro]:
+        if des not in List_Station:
+            break
+        al = []
+        for e in distros_dict[distro][des][1:]:
+            t = e["time"].split(":")
+            al.append(Airline(e["name"],e["price"],datetime.time(int(t[0]),int(t[1]))))
+        station.addDestination(DesNode(List_Station[des],al))
+print("prepare data complete!!\n\n")
+for e in List_Station:
+    print(List_Station[e],"\n")

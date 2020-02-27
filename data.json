@@ -1,10 +1,5 @@
 {
   "ATL" : {
-    "BOS" : [ null, {
-      "name" : "Delta",
-      "price" : 5578,
-      "time" : "2:27"
-    } ],
     "MIA" : [ null, {
       "name" : "Delta",
       "price" : 17752,
@@ -24,15 +19,6 @@
       "name" : "THAI",
       "price" : 8846,
       "time" : "2:45"
-    } ],
-    "NRT" : [ null, {
-      "name" : "Scoot",
-      "price" : 7599,
-      "time" : "5:45"
-    }, {
-      "name" : "ANA",
-      "price" : 20580,
-      "time" : "5:55"
     } ],
     "TPE" : [ null, {
       "name" : "Thai Lion Air",
@@ -57,11 +43,6 @@
     } ]
   },
   "CDG" : {
-    "BOS" : [ null, {
-      "name" : "Air France",
-      "price" : 21875,
-      "time" : "7:55"
-    } ],
     "MIA" : [ null, {
       "name" : "Air France",
       "price" : 23586,
@@ -231,11 +212,6 @@
     } ]
   },
   "LGA" : {
-    "BKK" : [ null, {
-      "name" : "ANA",
-      "price" : 16931,
-      "time" : "24:40"
-    } ],
     "HEL" : [ null, {
       "name" : "American",
       "price" : 17860,
@@ -279,15 +255,6 @@
       "name" : "American",
       "price" : 6209,
       "time" : "1:45"
-    } ],
-    "BOS" : [ null, {
-      "name" : "United",
-      "price" : 4947,
-      "time" : "2:10"
-    }, {
-      "name" : "American",
-      "price" : 4890,
-      "time" : "2:16"
     } ],
     "MIA" : [ null, {
       "name" : "ANA",
@@ -450,15 +417,6 @@
       "name" : "American",
       "price" : 9703,
       "time" : "4:21"
-    } ],
-    "BOS" : [ null, {
-      "name" : "United",
-      "price" : 8494,
-      "time" : "4:16"
-    }, {
-      "name" : "American",
-      "price" : 6810,
-      "time" : "5:06"
     } ]
   }
 }
