@@ -1,7 +1,7 @@
 from Class import *
 import json
 
-with open('AI_YamaSearch/data.json', 'r') as f:
+with open('data.json', 'r') as f:
     distros_dict = json.load(f)
 List_Station = {}
 for distro in distros_dict:
@@ -32,7 +32,7 @@ def uniform_cost_search(start,stop,time):
             for keySuccessor in keySuccessors:
                 cost_node = keySuccessor.getCost(time)
                 queue.insert(father_node,(keySuccessor,cost_node),cost_node)
-
+        
             reached_goal,cumulative_cost_goal =False,0
             while not queue.is_empty():
                 l = queue.remove()
@@ -62,5 +62,134 @@ def uniform_cost_search(start,stop,time):
                     print("\nTotal : %s Bath" % cumulative_cost_goal)
             else:
                 print("not found")
+def bi_uniform_cost_search(start,stop,time):
+    if start not in List_Station or stop not in List_Station:
+        print("Error: key_node_start'%s' or key_node_goal'%s' not exists!!"%(start,stop))
+    else:
+        if start == stop:
+            print("Finish: key_node_start'%s' == key_node_goal'%s' "%(start,stop))
+        else:
 
-uniform_cost_search("BOS","BKK",True)
+            queue = Queue()
+            queue2 = Queue()
+
+            father_node = {start:[]}
+            father_node2 = {stop:[]}
+        
+            keySuccessors = List_Station[start].getDestination()
+            keySuccessors2 = List_Station[stop].getDestination()
+            Dstart_cost=   {} # เก็บ cost ที่ start
+            Dstop_cost =   {} # เก็บ cost ที่ stop
+            Dstart_path=   {}  # เก็บ mapping start
+            Dstop_path =   {}  # เก็บ mapping stop
+            for keySuccessor in keySuccessors:
+                cost_node = keySuccessor.getCost(time)
+                queue.insert(father_node,(keySuccessor,cost_node),cost_node)     
+
+                Dstart_cost[ keySuccessor.getName()] =  keySuccessor.getCost(time)
+
+                copy = father_node.copy()
+                copy[keySuccessor.getName()] = str(keySuccessor.getBestAirline(time))
+                Dstart_path[ keySuccessor.getName()] = copy
+
+            for keySuccessor in keySuccessors2:
+                cost_node2 = keySuccessor.getCost(time)
+                queue2.insert(father_node2,(keySuccessor,cost_node2),cost_node2)
+
+                Dstop_cost[keySuccessor.getName()] =  keySuccessor.getCost(time)
+
+                copy = father_node2.copy()
+                copy[keySuccessor.getName()] = str(keySuccessor.getBestAirline(time))
+                Dstop_path[ keySuccessor.getName()] = copy
+
+            down = None # ค่า cost node ที่เชื่อกันแล้วน้อยสุด
+            downtext = "" # ชื่อ
+            if start in Dstop_cost:
+                down = Dstop_cost[start]
+                downtext = 'connect'         
+            while True :
+                try:
+                    l = queue.remove()
+                    l2 = queue2.remove()
+                except:
+                    break    
+                keyCurrent , cost_node = l[-1]
+                keyCurrent2 , cost_node2 = l2[-1]
+
+                father_node = l[0]
+                father_node2 = l2[0]
+
+                path_node = father_node.copy()
+                path_node[keyCurrent.getName()]=[str(keyCurrent.getBestAirline(time))]
+
+                path_node2 = father_node2.copy()
+                path_node2[keyCurrent2.getName()]=[str(keyCurrent2.getBestAirline(time))]
+                
+                if keyCurrent.getName() not in Dstart_cost:
+                    Dstart_cost[keyCurrent.getName()] =  cost_node
+                    copy = father_node.copy()
+                    copy[keyCurrent.getName()] = str(keyCurrent.getBestAirline(time))
+                    Dstart_path[ keyCurrent.getName()] = copy
+                if keyCurrent2.getName() not in Dstop_cost:
+                    Dstop_cost[keyCurrent2.getName()] =  cost_node2
+                    copy = father_node2.copy()
+                    copy[keyCurrent2.getName()] = str(keyCurrent2.getBestAirline(time))
+                    Dstop_path[ keyCurrent2.getName()] = copy
+                # if  keyCurrent.getName() == keyCurrent2.getName(): #เพิ่มได้ถ้าไม่กลัวมีบัค keyCurrent.getName()  in Dstop_cost or keyCurrent2.getName() in Dstart_cost or 
+                #     reached_goal = True
+                #     break
+                if keyCurrent.getName() in Dstart_cost and keyCurrent.getName() in Dstop_cost   :
+                    if down == None:
+                        down = Dstart_cost[keyCurrent.getName()]+Dstop_cost[keyCurrent.getName()]
+                        downtext =  keyCurrent.getName()
+                    elif down > Dstart_cost[keyCurrent.getName()]+Dstop_cost[keyCurrent.getName()]:
+                        down = Dstart_cost[keyCurrent.getName()]+Dstop_cost[keyCurrent.getName()]
+                        downtext =  keyCurrent.getName()
+                else:
+                    keySuccessors = List_Station[keyCurrent.getName()].getDestination()
+                    if keySuccessors:
+                        for keySuccessor in keySuccessors:
+                            if not keySuccessor.getName() in father_node  :
+                                cumulative_cost_goal = keySuccessor.getCost(time)+cost_node
+                                queue.insert(path_node,(keySuccessor,cumulative_cost_goal),cumulative_cost_goal)
+                                
+                if keyCurrent2.getName() in Dstart_cost and keyCurrent2.getName() in Dstop_cost   :
+                    if down == None:
+                            down = Dstart_cost[keyCurrent2.getName()]+Dstop_cost[keyCurrent2.getName()]
+                            downtext =  keyCurrent2.getName()
+                    elif down > Dstart_cost[keyCurrent2.getName()]+Dstop_cost[keyCurrent2.getName()]:
+                            down = Dstart_cost[keyCurrent2.getName()]+Dstop_cost[keyCurrent2.getName()]
+                            downtext =  keyCurrent2.getName()
+                else:            
+                        keySuccessors2 = List_Station[keyCurrent2.getName()].getDestination()
+                        if keySuccessors2:
+                            for keySuccessor in keySuccessors2:
+                                if not keySuccessor.getName() in father_node2  :
+                                    cumulative_cost_goal2 = keySuccessor.getCost(time)+cost_node2
+                                    queue2.insert(path_node2,(keySuccessor,cumulative_cost_goal2),cumulative_cost_goal2)
+            
+            if downtext != "":
+                print("=Found=")
+
+                if downtext  == "connect" :
+                    for e in Dstart_path[stop] :
+                        print(e+ " "+str(Dstart_path[stop][e])+"->",end=" ") 
+                    if time:
+                            print("\nTotal : "+str(down//3600)+" hour "+str(int(down%3600/60))+" minus")
+                    else:
+                        print("\nTotal : %s Bath" % down)
+                else :
+                    reverseStop = [i for i in Dstop_path[downtext]]
+                    for e in Dstart_path[downtext] :
+                        print(e+ " "+str(Dstart_path[downtext][e])+"->",end=" ") 
+                    for e in range(len(reverseStop)-2,-1,-1):
+                        print(reverseStop[e]+"  " + str(Dstop_path[downtext][reverseStop[e+1]])+"-> ",end= ' ')
+                    if time:
+                        print("\nTotal : "+str(down//3600)+" hour "+str(int(down%3600/60))+" minus")
+                    else:
+                        print("\nTotal : %s Bath" % down)
+
+
+#print (List_Station[])
+bi_uniform_cost_search("ICN","BOS",True)
+uniform_cost_search("ICN","BOS",True)
