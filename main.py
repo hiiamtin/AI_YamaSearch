@@ -63,4 +63,4 @@ def uniform_cost_search(start,stop,time):
             else:
                 print("not found")
 
-uniform_cost_search("BKK","MIA",True)
+uniform_cost_search("BOS","BKK",True)

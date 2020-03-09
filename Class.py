@@ -2,8 +2,8 @@ import heapq
 import datetime
 
 class Airline:
-    def __init__(self,name,price,time,park=None):
-        self.name,self.price,self.time,self.park = name,price,time,park
+    def __init__(self,name,price,time):
+        self.name,self.price,self.time = name,price,time
     def __str__(self):
         return self.name+","+str(self.price)+","+str(self.time)
     def getName(self):
