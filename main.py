@@ -2,8 +2,8 @@ from Class import *
 import time
 import json
 from tkinter import *
-from tkinter import scrolledtext
-with open('data.json', 'r') as f:
+
+with open('AI_YamaSearch/data.json', 'r') as f:
     distros_dict = json.load(f)
 List_Station = {}
 for distro in distros_dict:
@@ -190,6 +190,16 @@ def bi_uniform_cost_search(start,stop,time):
             else :
                 print("Not Found :C")
             print(count)
+
+List_Station_Position = {}
+def drawStation(start,stop):
+    if start in List_Station_Position and stop in List_Station_Position:
+        x_start,y_start = List_Station_Position[start]
+        x_stop,y_stop = List_Station_Position[stop]
+        canvas.create_line(x_start,y_start,x_stop,y_stop,fill ='red')
+    else:
+        print("Error!!")
+
 def update_gui(path_node):
     strgp = ""
     for e in path_node:
@@ -220,17 +230,29 @@ def update_gui(path_node):
 
 def getString(li):
     return li.pop(0)
-
+idt = []
 def clicked():
-    la = Label(root, text = "", font = ("Arial Bold",12))
-    la.grid(row = 4 ,column =1 ,columnspan = 6)
-    uniform_cost_search("BKK","LGA",True)
-    times = 1000
-    for i in allsearchgp:
-        print(i)
-        root.after(times, lambda: la.config(text=i))
-        times+=1000
+    if btn['text'] == "Search":
+        btn['text'] = "Cancle"     
+        la['text'] = "wait for Searching..."
+        uniform_cost_search("BKK","LGA",True)
+        times1 = 1000
+        times2 = times1
+        for i in allsearchgp:
+            print(i)
+            message(times2,i)
+            times2+=times1
+    elif btn['text'] == "Cancle":
+        print("Cancle")
+        for e in idt:
+            print(e)
+            root.after_cancel(e)
+        la['text'] = "Please Click for Search."
+        btn['text'] = 'Search'
 
+def message(times,i):
+    idd=root.after(times,lambda: la.config(text=i))
+    idt.append(idd)
 
 root = Tk()
 root.title("AI YamaSearch")
@@ -243,7 +265,9 @@ label1 = Label(root,text= "AI YamaSearch",font = ("Arial",20))
 start_text = Label(root,text= "Start :", font = ("Arial",18))
 des_text = Label(root,text= "Destination :", font = ("Arial",18))
 label1.grid(row=0,column=1, columnspan = 6)
-btn = Button(root, text = "Click Me", bg = "black", fg = "red", command = clicked)
+la = Label(root, text = "Please Click for Search.", font = ("Arial Bold",12))
+la.grid(row = 4 ,column =1 ,columnspan = 6)
+btn = Button(root, text = "Search", bg = "black", fg = "red", command = clicked)
 
 
 # get input using entry class
@@ -285,7 +309,7 @@ rad2.grid(column = 4, row = 2)
 
 
 canvas = Canvas(root, width = 890, height = 548)  
-img = PhotoImage(file="AIMap.PNG")      
+img = PhotoImage(file="AI_YamaSearch/AIMap.PNG")      
 canvas.create_image(20,20, anchor=NW, image=img)  
 canvas.grid(column = 1, row = 1, columnspan = 6)
 canvas.create_line(0,0,100,100,fill ='red')
