@@ -1,8 +1,9 @@
 from Class import *
 import time
 import json
-
-with open('AI_YamaSearch/data.json', 'r') as f:
+from tkinter import *
+from tkinter import scrolledtext
+with open('data.json', 'r') as f:
     distros_dict = json.load(f)
 List_Station = {}
 for distro in distros_dict:
@@ -59,7 +60,6 @@ def uniform_cost_search(start,stop,time):
             if reached_goal:
                 print("=uniform-cost-search-Found=")
                 for e in path_node:
-                    str1+=e+str(path_node[e])+"->"
                     print(e+str(path_node[e])+"->",end="")
                 if time:
                     print("\nTotal : "+str(cumulative_cost_goal//3600)+" hour "+str(int(cumulative_cost_goal%3600/60))+" minus")
@@ -218,13 +218,18 @@ def update_gui(path_node):
 #end = time.time()
 #print(end-start_time)
 
-from tkinter import scrolledtext
+def getString(li):
+    return li.pop(0)
 
 def clicked():
-    la = Label(window, text = "Hello", font = ("Arial Bold",20))
-    
+    la = Label(root, text = "", font = ("Arial Bold",12))
+    la.grid(row = 4 ,column =1 ,columnspan = 6)
     uniform_cost_search("BKK","LGA",True)
-    #for i in allsearchgp:
+    times = 1000
+    for i in allsearchgp:
+        print(i)
+        root.after(times, lambda: la.config(text=i))
+        times+=1000
 
 
 root = Tk()
