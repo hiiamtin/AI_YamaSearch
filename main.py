@@ -60,9 +60,18 @@ def uniform_cost_search(start,stop,time):
             if reached_goal:
                 print("=uniform-cost-search-Found=")
                 str1 = ""
+                prev = None
                 for e in path_node:
                     str1+=e+str(path_node[e])+"->"
                     print(e+str(path_node[e])+"->",end="")
+                    if prev == None:
+                        prevx = coordinates[e[:3]][0]+n
+                        prevy = coordinates[e[:3]][1]+n
+                        prev = 1
+                    else:
+                        canvas.create_line(coordinates[e[:3]][0]+n,coordinates[e[:3]][1]+n,prevx,prevy,fill ='red',tag='line')
+                        prevx = coordinates[e[:3]][0]+n
+                        prevy = coordinates[e[:3]][1]+n
                 if time:
                     str1+="\nTotal : "+str(cumulative_cost_goal//3600)+" hour "+str(int(cumulative_cost_goal%3600/60))+" minus"
                     print("\nTotal : "+str(cumulative_cost_goal//3600)+" hour "+str(int(cumulative_cost_goal%3600/60))+" minus")
@@ -73,6 +82,7 @@ def uniform_cost_search(start,stop,time):
             else:
                 return "not found"
             print(count)
+
 def bi_uniform_cost_search(start,stop,time):
     if start not in List_Station or stop not in List_Station:
         return "Error: key_node_start'%s' or key_node_goal'%s' not exists!!"%(start,stop)
@@ -177,9 +187,18 @@ def bi_uniform_cost_search(start,stop,time):
                 print("=Bi-Direct-Found=")
                 str1 = ""
                 if downtext  == "connect" :
+                    prev = None
                     for e in Dstart[stop][0] :
                         str1+=e+""+str(Dstart[stop][0][e])+"->"
                         print(e+""+str(Dstart[stop][0][e])+"->",end=" ")
+                        if prev == None:
+                            prevx = coordinates[e[:3]][0]+n
+                            prevy = coordinates[e[:3]][1]+n
+                            prev = 1
+                        else:
+                            canvas.create_line(coordinates[e[:3]][0]+n,coordinates[e[:3]][1]+n,prevx,prevy,fill ='red',tag='line')
+                            prevx = coordinates[e[:3]][0]+n
+                            prevy = coordinates[e[:3]][1]+n
                     if time:
                         str1+="\nTotal : "+str(down//3600)+" hour "+str(int(down%3600/60))+" minus"
                         print("\nTotal : "+str(down//3600)+" hour "+str(int(down%3600/60))+" minus")
@@ -187,13 +206,26 @@ def bi_uniform_cost_search(start,stop,time):
                         str1+="\nTotal : "+str(down)+"Baht"  
                         print("\nTotal : %s Baht" % down)
                 else :
+                    prev_R1 = None
+                    prev_R2 = None
                     reverseStop = [i for i in Dstop[downtext][0]]
                     for e in Dstart[downtext][0] :
                         str1+=e+""+str(Dstart[downtext][0][e])+"->"
                         print(e+""+str(Dstart[downtext][0][e])+"->",end="")
+                        if prev_R1 == None:
+                            prevx_R = coordinates[e[:3]][0]+n
+                            prevy_R = coordinates[e[:3]][1]+n
+                            prev_R1 = 1
+                        else:
+                            canvas.create_line(coordinates[e[:3]][0]+n,coordinates[e[:3]][1]+n,prevx_R,prevy_R,fill ='red',tag='line')
+                            prevx_R = coordinates[e[:3]][0]+n
+                            prevy_R = coordinates[e[:3]][1]+n
                     for e in range(len(reverseStop)-2,-1,-1):
                         str1 +=reverseStop[e]+""+str(Dstop[downtext][0][reverseStop[e+1]])
                         print(reverseStop[e]+""+str(Dstop[downtext][0][reverseStop[e+1]])+"->",end=' ')
+                        canvas.create_line(coordinates[reverseStop[e]][0]+n,coordinates[reverseStop[e]][1]+n,prevx_R,prevy_R,fill ='blue',tag='line')
+                        prevx_R = coordinates[reverseStop[e][:3]][0]+n
+                        prevy_R = coordinates[reverseStop[e][:3]][1]+n
                     if time:
                         str1+="\nTotal : "+str(down//3600)+" hour "+str(int(down%3600/60))+" minus"
                         print("\nTotal : "+str(down//3600)+" hour "+str(int(down%3600/60))+" minus")
@@ -312,7 +344,8 @@ def clicked():
                 la3['text'] = ""
                 btn['text'] = 'Search'
                 idt.clear()
-        
+            canvas.delete('line')
+            
 
 
 def message(times,i):
@@ -383,11 +416,56 @@ rad2.grid(column = 4, row = 2)
 
 
 # Set the value for Spinbox
+coordinates = {'BKK' : [666,319],
+               'MIA' : [229,293],
+               'NRT' : [753,264],
+               'HND' : [744,255],
+               'PEK' : [694,243],
+               'ICN' : [716,250],
+               'PVG' : [707,269],
+               'XMN' : [703,287],
+               'TPE' : [711,292],
+               'HKG' : [694,297],
+               'MNL' : [711,324],
+               'CAN' : [679,283],
+               'CMB' : [613,342],
+               'MCT' : [561,297],
+               'AUH' : [548,292],
+               'DOH' : [537,288],
+               'KWI' : [532,287],
+               'IST' : [484,241],
+               'SVO' : [493,188], 
+               'HEL' : [473,171],
+               'VIE' : [454,218],
+               'FRA' : [442,210],
+               'ZRH' : [441,224],
+               'CDG' : [431,216],
+               'AMS' : [431,204],
+               'LHR' : [418,206],
+               'DUB' : [403,200],
+               'LIS' : [399,250],
+               'BOS' : [266,226],
+               'LGA' : [252,235],
+               'JFK' : [252,246],
+               'YYZ' : [238,226],
+               'DTW' : [224,223],
+               'ORD' : [234,206],
+               'ATL' : [223,264],
+               'DEN' : [183,246],
+               'IAH' : [192,278],
+               'DFW' : [191,264],
+               'LAS' : [154,258],
+               'LAX' : [142,264],
+               'SFO' : [132,250],
+               'SEA' : [142,225],
+               'YVR' : [137,213]
+}
 
+n = 20
 
 canvas = Canvas(root, width = 890, height = 548)  
 img = PhotoImage(file="AIMap.PNG")      
 canvas.create_image(20,20, anchor=NW, image=img)  
 canvas.grid(column = 1, row = 1, columnspan = 6)
-canvas.create_line(0,0,100,100,fill ='red')
+#canvas.create_line(0,0,100,100,fill ='red')
 root.mainloop()
