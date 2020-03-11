@@ -2,8 +2,8 @@ from Class import *
 import time
 import json
 from tkinter import *
-
-with open('AI_YamaSearch/data.json', 'r') as f:
+from tkinter import messagebox as mess
+with open('data.json', 'r') as f:
     distros_dict = json.load(f)
 List_Station = {}
 for distro in distros_dict:
@@ -23,10 +23,10 @@ print("prepare data complete!!\n\n")
 
 def uniform_cost_search(start,stop,time):
     if start not in List_Station or stop not in List_Station:
-        print("Error: key_node_start'%s' or key_node_goal'%s' not exists!!"%(start,stop))
+        return "Error: key_node_start'%s' or key_node_goal'%s' not exists!!"%(start,stop)
     else:
         if start == stop:
-            print("Finish: key_node_start'%s' == key_node_goal'%s' "%(start,stop))
+            return"Finish: key_node_start'%s' == key_node_goal'%s' "%(start,stop)
         else:
             queue = Queue()
             father_node = {start:[]}
@@ -59,23 +59,27 @@ def uniform_cost_search(start,stop,time):
                             queue.insert(path_node,(keySuccessor,cumulative_cost_goal),cumulative_cost_goal)
             if reached_goal:
                 print("=uniform-cost-search-Found=")
+                str1 = ""
                 for e in path_node:
+                    str1+=e+str(path_node[e])+"->"
                     print(e+str(path_node[e])+"->",end="")
                 if time:
+                    str1+="\nTotal : "+str(cumulative_cost_goal//3600)+" hour "+str(int(cumulative_cost_goal%3600/60))+" minus"
                     print("\nTotal : "+str(cumulative_cost_goal//3600)+" hour "+str(int(cumulative_cost_goal%3600/60))+" minus")
                 else:
+                    str1+="\nTotal :"+str(cumulative_cost_goal)+"Baht"
                     print("\nTotal : %s Baht" % cumulative_cost_goal)
+                return str1
             else:
-                print("not found")
+                return "not found"
             print(count)
 def bi_uniform_cost_search(start,stop,time):
     if start not in List_Station or stop not in List_Station:
-        print("Error: key_node_start'%s' or key_node_goal'%s' not exists!!"%(start,stop))
+        return "Error: key_node_start'%s' or key_node_goal'%s' not exists!!"%(start,stop)
     else:
         if start == stop:
-            print("Finish: key_node_start'%s' == key_node_goal'%s' "%(start,stop))
+            return "Finish: key_node_start'%s' == key_node_goal'%s' "%(start,stop)
         else:
-
             queue = Queue()
             queue2 = Queue()
 
@@ -118,7 +122,8 @@ def bi_uniform_cost_search(start,stop,time):
 
                 path_node2 = father_node2.copy()
                 path_node2[keyCurrent2.getName()]=[str(keyCurrent2.getBestAirline(time))]
-
+                update_gui(path_node)
+                update_gui2(path_node2)
 
                 if keyCurrent.getName() not in Dstart:
                     Dstart[keyCurrent.getName()] = [path_node,cost_node]
@@ -170,25 +175,35 @@ def bi_uniform_cost_search(start,stop,time):
                                         queue2.insert(path_node2,(keySuccessor,cumulative_cost_goal2),cumulative_cost_goal2)
             if downtext != "":
                 print("=Bi-Direct-Found=")
+                str1 = ""
                 if downtext  == "connect" :
                     for e in Dstart[stop][0] :
+                        str1+=e+""+str(Dstart[stop][0][e])+"->"
                         print(e+""+str(Dstart[stop][0][e])+"->",end=" ")
                     if time:
+                        str1+="\nTotal : "+str(down//3600)+" hour "+str(int(down%3600/60))+" minus"
                         print("\nTotal : "+str(down//3600)+" hour "+str(int(down%3600/60))+" minus")
                     else:
+                        str1+="\nTotal : "+str(down)+"Baht"  
                         print("\nTotal : %s Baht" % down)
                 else :
                     reverseStop = [i for i in Dstop[downtext][0]]
                     for e in Dstart[downtext][0] :
+                        str1+=e+""+str(Dstart[downtext][0][e])+"->"
                         print(e+""+str(Dstart[downtext][0][e])+"->",end="")
                     for e in range(len(reverseStop)-2,-1,-1):
+                        str1 +=reverseStop[e]+""+str(Dstop[downtext][0][reverseStop[e+1]])
                         print(reverseStop[e]+""+str(Dstop[downtext][0][reverseStop[e+1]])+"->",end=' ')
                     if time:
+                        str1+="\nTotal : "+str(down//3600)+" hour "+str(int(down%3600/60))+" minus"
                         print("\nTotal : "+str(down//3600)+" hour "+str(int(down%3600/60))+" minus")
                     else:
+                        str1+= "\nTotal : %s Baht" % down
                         print("\nTotal : %s Baht" % down)
+                return str1
             else :
                 print("Not Found :C")
+                return "Not Found :C"
             print(count)
 
 List_Station_Position = {}
@@ -203,8 +218,13 @@ def drawStation(start,stop):
 def update_gui(path_node):
     strgp = ""
     for e in path_node:
-         strgp+=e+str(path_node[e])+"->"
+         strgp+=e+"->"
     allsearchgp.append(strgp)
+def update_gui2(path_node2):
+    strgp = ""
+    for e in path_node2:
+         strgp+=e+"->"
+    allsearchgp2.append(strgp)
     
 
     
@@ -232,26 +252,74 @@ def getString(li):
     return li.pop(0)
 idt = []
 def clicked():
-    if btn['text'] == "Search":
-        btn['text'] = "Cancle"     
-        la['text'] = "wait for Searching..."
-        uniform_cost_search("BKK","LGA",True)
-        times1 = 1000
-        times2 = times1
-        for i in allsearchgp:
-            print(i)
-            message(times2,i)
-            times2+=times1
-    elif btn['text'] == "Cancle":
-        print("Cancle")
-        for e in idt:
-            print(e)
-            root.after_cancel(e)
-        la['text'] = "Please Click for Search."
-        btn['text'] = 'Search'
+    if txt3.get() == "":
+        mess.showinfo("Title", "Please Choose Your Delay")
+    elif selected.get() == 1:
+        if btn['text'] == "Search":
+            btn['text'] = "Cancle"     
+            la['text'] = "wait for Searching..."
+            start_time = time.time()
+            ans  = uniform_cost_search(txt.get(),txt2.get(),True)
+            endtime = (time.time() - start_time)*1000
+            times1 = int(txt3.get())
+            times2 = times1
+            for i in allsearchgp:
+                message(times2,i)
+                times2+=times1
+            else:
+                root.after(times2,lambda: la3.config(text="ANSWER:"+ans+ "\nSearchTimes : "+str(endtime)+"ms"))
+                allsearchgp.clear()
+        elif btn['text'] == "Cancle":
+            print("Cancle")
+            for e in idt:
+                root.after_cancel(e)
+                la['text'] = "Please Click for Search."
+                btn['text'] = 'Search'
+            else: 
+                la['text'] = "Please Click for Search."
+                la2['text'] = ""
+                la3['text'] = ""
+                btn['text'] = 'Search'
+                idt.clear()
+    elif selected.get() == 2 :
+        if btn['text'] == "Search":
+            btn['text'] = "Cancle"     
+            la['text'] = "wait for Searching..."
+            start_time = time.time()
+            ans = bi_uniform_cost_search(txt.get(),txt2.get(),True)
+            endtime = (time.time() - start_time)*1000
+            times1 = int(txt3.get())
+            times2 = times1
+            for i in allsearchgp:
+                message(times2,i)
+                times2+=times1
+            else:
+                allsearchgp.clear()
+            times2 = times1
+            for i in allsearchgp2:
+                message2(times2,i)
+                times2+=times1
+            else:
+                allsearchgp.clear()
+                root.after(times2,lambda: la3.config(text="ANSWER:"+ans + "\nSearchTimes : "+str(endtime)+"ms"))
+        elif btn['text'] == "Cancle":
+            print("Cancle")
+            for e in idt:
+                root.after_cancel(e)
+            else:
+                la['text'] = "Please Click for Search."
+                la2['text'] = ""
+                la3['text'] = ""
+                btn['text'] = 'Search'
+                idt.clear()
+        
+
 
 def message(times,i):
     idd=root.after(times,lambda: la.config(text=i))
+    idt.append(idd)
+def message2(times,i):
+    idd=root.after(times,lambda: la2.config(text=i))
     idt.append(idd)
 
 root = Tk()
@@ -260,20 +328,28 @@ root.geometry('900x800')
 home = Frame(root)
 
 allsearchgp = []
+allsearchgp2 = []
 
 label1 = Label(root,text= "AI YamaSearch",font = ("Arial",20))
 start_text = Label(root,text= "Start :", font = ("Arial",18))
 des_text = Label(root,text= "Destination :", font = ("Arial",18))
 label1.grid(row=0,column=1, columnspan = 6)
 la = Label(root, text = "Please Click for Search.", font = ("Arial Bold",12))
-la.grid(row = 4 ,column =1 ,columnspan = 6)
+la.grid(row = 4 ,column =1 ,columnspan = 50)
+la2 = Label(root, text = "", font = ("Arial Bold",12))
+la2.grid(row = 5 ,column =1 ,columnspan = 50)
+la3 = Label(root, text = "", font = ("Arial Bold",12))
+la3.grid(row = 6 ,column =1 ,columnspan = 50)
+delay_text = Label(root, text = "Delay(ms):", font = ("Arial Bold",12))
+delay_text.grid(row = 2,column = 5)
 btn = Button(root, text = "Search", bg = "black", fg = "red", command = clicked)
 
 
 # get input using entry class
 
-txt = Entry(root, width = 10, font = ("Arial",18))
+txt =  Entry(root, width = 10, font = ("Arial",18))
 txt2 = Entry(root, width = 10, font = ("Arial",18))
+txt3 = Entry(root, width = 10, font = ("Arial",12))
 
 # use the grid function as usual to add it to the root
 
@@ -281,6 +357,7 @@ txt.grid(column = 3, row = 3)
 start_text.grid(column = 2, row = 3)
 des_text.grid(column = 4, row = 3)
 txt2.grid(column = 5, row = 3)
+txt3.grid(column = 6, row = 2)
 
 
 
@@ -309,7 +386,7 @@ rad2.grid(column = 4, row = 2)
 
 
 canvas = Canvas(root, width = 890, height = 548)  
-img = PhotoImage(file="AI_YamaSearch/AIMap.PNG")      
+img = PhotoImage(file="AIMap.PNG")      
 canvas.create_image(20,20, anchor=NW, image=img)  
 canvas.grid(column = 1, row = 1, columnspan = 6)
 canvas.create_line(0,0,100,100,fill ='red')
