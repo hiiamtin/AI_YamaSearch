@@ -54,24 +54,14 @@ def uniform_cost_search(start,stop,time):
                 if keySuccessors:
                     for keySuccessor in keySuccessors:
                         if not keySuccessor.getName() in father_node:
-                            #print(keySuccessor.getName())
                             cumulative_cost_goal = keySuccessor.getCost(time)+cost_node
                             queue.insert(path_node,(keySuccessor,cumulative_cost_goal),cumulative_cost_goal)
             if reached_goal:
                 print("=uniform-cost-search-Found=")
                 str1 = ""
-                prev = None
                 for e in path_node:
                     str1+=e+str(path_node[e])+"->"
                     print(e+str(path_node[e])+"->",end="")
-                    if prev == None:
-                        prevx = coordinates[e[:3]][0]+n
-                        prevy = coordinates[e[:3]][1]+n
-                        prev = 1
-                    else:
-                        canvas.create_line(coordinates[e[:3]][0]+n,coordinates[e[:3]][1]+n,prevx,prevy,fill ='red',tag='line')
-                        prevx = coordinates[e[:3]][0]+n
-                        prevy = coordinates[e[:3]][1]+n
                 if time:
                     str1+="\nTotal : "+str(cumulative_cost_goal//3600)+" hour "+str(int(cumulative_cost_goal%3600/60))+" minus"
                     print("\nTotal : "+str(cumulative_cost_goal//3600)+" hour "+str(int(cumulative_cost_goal%3600/60))+" minus")
@@ -161,9 +151,6 @@ def bi_uniform_cost_search(start,stop,time):
                                 else:
                                     cumulative_cost_goal = keySuccessor.getCost(time)+cost_node
                                     queue.insert(path_node,(keySuccessor,cumulative_cost_goal),cumulative_cost_goal)
-                            elif not keySuccessor.getName() in Dstart and down == None  :
-                                cumulative_cost_goal = keySuccessor.getCost(time)+cost_node
-                                queue.insert(path_node,(keySuccessor,cumulative_cost_goal),cumulative_cost_goal)
                 if keyCurrent2.getName() in Dstart and keyCurrent2.getName() in Dstop   :
                     if down == None:
                             down = Dstart[keyCurrent2.getName()][1]+Dstop[keyCurrent2.getName()][1]
@@ -187,18 +174,11 @@ def bi_uniform_cost_search(start,stop,time):
                 print("=Bi-Direct-Found=")
                 str1 = ""
                 if downtext  == "connect" :
-                    prev = None
+                    update_gui(Dstart[downtext][0])
+                    update_gui2(Dstop[downtext][0])
                     for e in Dstart[stop][0] :
                         str1+=e+""+str(Dstart[stop][0][e])+"->"
                         print(e+""+str(Dstart[stop][0][e])+"->",end=" ")
-                        if prev == None:
-                            prevx = coordinates[e[:3]][0]+n
-                            prevy = coordinates[e[:3]][1]+n
-                            prev = 1
-                        else:
-                            canvas.create_line(coordinates[e[:3]][0]+n,coordinates[e[:3]][1]+n,prevx,prevy,fill ='red',tag='line')
-                            prevx = coordinates[e[:3]][0]+n
-                            prevy = coordinates[e[:3]][1]+n
                     if time:
                         str1+="\nTotal : "+str(down//3600)+" hour "+str(int(down%3600/60))+" minus"
                         print("\nTotal : "+str(down//3600)+" hour "+str(int(down%3600/60))+" minus")
@@ -206,26 +186,15 @@ def bi_uniform_cost_search(start,stop,time):
                         str1+="\nTotal : "+str(down)+"Baht"  
                         print("\nTotal : %s Baht" % down)
                 else :
-                    prev_R1 = None
-                    prev_R2 = None
+                    update_gui(Dstart[downtext][0])
+                    update_gui2(Dstop[downtext][0])
                     reverseStop = [i for i in Dstop[downtext][0]]
                     for e in Dstart[downtext][0] :
                         str1+=e+""+str(Dstart[downtext][0][e])+"->"
                         print(e+""+str(Dstart[downtext][0][e])+"->",end="")
-                        if prev_R1 == None:
-                            prevx_R = coordinates[e[:3]][0]+n
-                            prevy_R = coordinates[e[:3]][1]+n
-                            prev_R1 = 1
-                        else:
-                            canvas.create_line(coordinates[e[:3]][0]+n,coordinates[e[:3]][1]+n,prevx_R,prevy_R,fill ='red',tag='line')
-                            prevx_R = coordinates[e[:3]][0]+n
-                            prevy_R = coordinates[e[:3]][1]+n
                     for e in range(len(reverseStop)-2,-1,-1):
                         str1 +=reverseStop[e]+""+str(Dstop[downtext][0][reverseStop[e+1]])
                         print(reverseStop[e]+""+str(Dstop[downtext][0][reverseStop[e+1]])+"->",end=' ')
-                        canvas.create_line(coordinates[reverseStop[e]][0]+n,coordinates[reverseStop[e]][1]+n,prevx_R,prevy_R,fill ='blue',tag='line')
-                        prevx_R = coordinates[reverseStop[e][:3]][0]+n
-                        prevy_R = coordinates[reverseStop[e][:3]][1]+n
                     if time:
                         str1+="\nTotal : "+str(down//3600)+" hour "+str(int(down%3600/60))+" minus"
                         print("\nTotal : "+str(down//3600)+" hour "+str(int(down%3600/60))+" minus")
@@ -238,14 +207,16 @@ def bi_uniform_cost_search(start,stop,time):
                 return "Not Found :C"
             print(count)
 
-List_Station_Position = {}
-def drawStation(start,stop):
-    if start in List_Station_Position and stop in List_Station_Position:
-        x_start,y_start = List_Station_Position[start]
-        x_stop,y_stop = List_Station_Position[stop]
-        canvas.create_line(x_start,y_start,x_stop,y_stop,fill ='red')
+
+def drawStation(start,stop,times,color='red',tag='line'):
+    if start in coordinates and stop in coordinates:
+        x_start,y_start = coordinates[start]
+        x_stop,y_stop = coordinates[stop]
+        idd=root.after(times,lambda: canvas.create_line(x_start+error_pos,y_start+error_pos,x_stop+error_pos,y_stop+error_pos,fill = color,tag=tag))
     else:
         print("Error!!")
+        idd=None
+    return idd
 
 def update_gui(path_node):
     strgp = ""
@@ -259,12 +230,6 @@ def update_gui2(path_node2):
     allsearchgp2.append(strgp)
     
 
-    
-    
-#start_time = time.time()
-#bi =bi_uniform_cost_search("BKK","LGA",True)
-##end = time.tisme()
-##print(end-start_time)
 
 ##start_time = time.time()
 #uni =uniform_cost_search("BKK","LGA",True)
@@ -299,14 +264,12 @@ def clicked():
                 message(times2,i)
                 times2+=times1
             else:
-                root.after(times2,lambda: la3.config(text="ANSWER:"+ans+ "\nSearchTimes : "+str(endtime)+"ms"))
+                root.after(int(times2+times1),lambda: la3.config(text="ANSWER:"+ans+ "\nSearchTimes : "+str(endtime)+"ms"))
                 allsearchgp.clear()
         elif btn['text'] == "Cancle":
             print("Cancle")
             for e in idt:
                 root.after_cancel(e)
-                la['text'] = "Please Click for Search."
-                btn['text'] = 'Search'
             else: 
                 la['text'] = "Please Click for Search."
                 la2['text'] = ""
@@ -349,10 +312,32 @@ def clicked():
 
 
 def message(times,i):
+    root.after(times,lambda: canvas.delete('line'))
     idd=root.after(times,lambda: la.config(text=i))
+    print(i.split("->"))
+    l = i.split("->")
+    prev=None
+    for e in range(len(l)-1):
+        if prev == None:
+            prev = l[e]
+        else:
+            idd2=drawStation(prev,l[e],times)     
+            prev=l[e]
+            idt.append(idd2)
     idt.append(idd)
 def message2(times,i):
+    root.after(times,lambda: canvas.delete('line2'))
     idd=root.after(times,lambda: la2.config(text=i))
+    print(i.split("->"))
+    l = i.split("->")
+    prev=None
+    for e in range(len(l)-1):
+        if prev == None:
+            prev = l[e]
+        else:
+            idd2=drawStation(prev,l[e],times,'blue','line2')     
+            prev=l[e]
+            idt.append(idd2)
     idt.append(idd)
 
 root = Tk()
@@ -461,7 +446,7 @@ coordinates = {'BKK' : [666,319],
                'YVR' : [137,213]
 }
 
-n = 20
+error_pos = 20
 
 canvas = Canvas(root, width = 890, height = 548)  
 img = PhotoImage(file="AIMap.PNG")      
