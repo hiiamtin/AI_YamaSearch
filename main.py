@@ -1,6 +1,5 @@
 from Class import *
-import time
-import json
+import time,json,math
 from tkinter import *
 from tkinter import messagebox as mess
 from PIL import Image
@@ -238,8 +237,17 @@ def rescale():
         x=x*(WIDTH/890)
         y=y*(HEIGHT/548)
         coordinates[e]=[x,y]
-        print(e,x,y)
-
+        #print(e,x,y)
+def getDistance(a,b):
+    x1,y1=a
+    x2,y2=b
+    return int(math.sqrt(math.pow(x1-x2,2)+math.pow(y1-y2,2)))
+def getHeuristics(stop):
+    h = {stop:0}
+    for e in coordinates:
+        if e != stop:
+            h[e]=getDistance(coordinates[e],coordinates[stop])
+    return h
 
 
 ##start_time = time.time()
@@ -287,10 +295,13 @@ def clicked():
                 la3['text'] = ""
                 btn['text'] = 'Search'
                 idt.clear()
+            canvas.delete('line')
     elif selected.get() == 2 :
         if btn['text'] == "Search":
             btn['text'] = "Cancle"     
             la['text'] = "wait for Searching..."
+            
+            print(getHeuristics(txt2.get()))
             start_time = time.time()
             ans = bi_uniform_cost_search(txt.get(),txt2.get(),True)
             endtime = (time.time() - start_time)*1000
@@ -319,6 +330,7 @@ def clicked():
                 btn['text'] = 'Search'
                 idt.clear()
             canvas.delete('line')
+            canvas.delete('line2')
             
 def message(times,i):
     root.after(times,lambda: canvas.delete('line'))
@@ -454,6 +466,7 @@ coordinates = {'BKK' : [666,319],
                'SEA' : [142,225],
                'YVR' : [137,213]
 }
+Heuristics={}
 
 error_pos = 20
 #890,548
@@ -461,10 +474,12 @@ WIDTH=668
 HEIGHT=441
 canvas = Canvas(root, width = WIDTH, height = HEIGHT)
 rescale()
+
 img = Image.open("AIMap.PNG")
 img = img.resize((WIDTH, HEIGHT), Image.ANTIALIAS)
 img = ImageTk.PhotoImage(img)
 canvas.create_image(20,20, anchor=NW, image=img)
 canvas.grid(column = 1, row = 1, columnspan = 6)
+
 #canvas.create_line(0,0,100,100,fill ='red')
 root.mainloop()
