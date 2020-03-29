@@ -3,6 +3,9 @@ import time
 import json
 from tkinter import *
 from tkinter import messagebox as mess
+from PIL import Image
+from PIL import ImageTk
+
 with open('data.json', 'r') as f:
     distros_dict = json.load(f)
 List_Station = {}
@@ -228,7 +231,15 @@ def update_gui2(path_node2):
     for e in path_node2:
          strgp+=e+"->"
     allsearchgp2.append(strgp)
-    
+
+def rescale():
+    for e in coordinates:
+        x,y=coordinates[e]
+        x=x*(WIDTH/890)
+        y=y*(HEIGHT/548)
+        coordinates[e]=[x,y]
+        print(e,x,y)
+
 
 
 ##start_time = time.time()
@@ -309,8 +320,6 @@ def clicked():
                 idt.clear()
             canvas.delete('line')
             
-
-
 def message(times,i):
     root.after(times,lambda: canvas.delete('line'))
     idd=root.after(times,lambda: la.config(text=i))
@@ -447,10 +456,15 @@ coordinates = {'BKK' : [666,319],
 }
 
 error_pos = 20
-
-canvas = Canvas(root, width = 890, height = 548)  
-img = PhotoImage(file="AIMap.PNG")      
-canvas.create_image(20,20, anchor=NW, image=img)  
+#890,548
+WIDTH=668
+HEIGHT=441
+canvas = Canvas(root, width = WIDTH, height = HEIGHT)
+rescale()
+img = Image.open("AIMap.PNG")
+img = img.resize((WIDTH, HEIGHT), Image.ANTIALIAS)
+img = ImageTk.PhotoImage(img)
+canvas.create_image(20,20, anchor=NW, image=img)
 canvas.grid(column = 1, row = 1, columnspan = 6)
 #canvas.create_line(0,0,100,100,fill ='red')
 root.mainloop()
