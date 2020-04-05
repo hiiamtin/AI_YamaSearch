@@ -5,6 +5,7 @@ from Class import *
 import json
 import tracemalloc
 import time
+import math
 
 with open('data.json', 'r') as f:
     distros_dict = json.load(f)
@@ -60,7 +61,7 @@ def uniform_cost_search(start,stop,time):
                             cumulative_cost_goal = keySuccessor.getCost(time)+cost_node
                             queue.insert(path_node,(keySuccessor,cumulative_cost_goal),cumulative_cost_goal)
             if reached_goal:
-                print(">>> Uniform Cost Search")
+                print(">>> Uniform Cost Search ; loop =",count)
                 str1 = ""
                 for e in path_node:
                     str1+=e+str(path_node[e])+"->"
@@ -172,7 +173,7 @@ def bi_uniform_cost_search(start,stop,time):
                                         cumulative_cost_goal2 = keySuccessor.getCost(time)+cost_node2
                                         queue2.insert(path_node2,(keySuccessor,cumulative_cost_goal2),cumulative_cost_goal2)
             if downtext != "":
-                print(">>> Bidirectional Uniform Cost Search")
+                print(">>> Bidirectional Uniform Cost Search ; loop =",count)
                 str1 = ""
                 if downtext  == "connect" :
                     for e in Dstart[stop][0] :
@@ -204,8 +205,100 @@ def bi_uniform_cost_search(start,stop,time):
                 return "Not Found :C"
             #print(count)
 
+def a_star_search(start,stop,Heuristics,time):
+    if len(Heuristics)==0:
+        return "Error: Heuristics is empty!!"
+    elif start not in List_Station or stop not in List_Station:
+        return "Error: key_node_start'%s' or key_node_goal'%s' not exists!!"%(start,stop)
+    else:
+        if start == stop:
+            return"Finish: key_node_start'%s' == key_node_goal'%s' "%(start,stop)
+        else:
+            queue = Queue()
+            father_node = {start:[]}
+            keySuccessors = List_Station[start].getDestination()
+            for keySuccessor in keySuccessors:
+                cost_node = keySuccessor.getCost(time)
+                priority = cost_node+getHeuristics(keySuccessor.getName())
+                #print(keySuccessor.getName(),cost_node,getHeuristics(keySuccessor.getName()),priority)
+                queue.insert(father_node,(keySuccessor,cost_node),priority)
+
+            reached_goal,cumulative_cost_goal =False,0
+            count=0
+            while not queue.is_empty():
+                count+=1
+                l = queue.remove()
+                keyCurrent , cost_node = l[-1]
+                father_node = l[0]
+                #print(father_node,"->",keyCurrent,cost_node)
+                path_node = father_node.copy()
+                path_node[keyCurrent.getName()]=[str(keyCurrent.getBestAirline(time))]
+                if keyCurrent.getName() == stop:
+                    reached_goal = True
+                    cumulative_cost_goal = cost_node
+                    break
+                keySuccessors = List_Station[keyCurrent.getName()].getDestination()
+                if keySuccessors:
+                    for keySuccessor in keySuccessors:
+                        if not keySuccessor.getName() in father_node:
+                            cumulative_cost_goal = keySuccessor.getCost(time)+cost_node
+                            priority = cumulative_cost_goal+getHeuristics(keySuccessor.getName())
+                            queue.insert(path_node,(keySuccessor,cumulative_cost_goal),priority)
+            if reached_goal:
+                print(">>> A* Search ; loop =",count)
+                str1 = ""
+                for e in path_node:
+                    str1+=e+str(path_node[e])+"->"
+                    #print(e+str(path_node[e])+"->",end="")
+                if time:
+                    str1+="\nTotal : "+str(cumulative_cost_goal//3600)+" hour "+str(int(cumulative_cost_goal%3600/60))+" minus"
+                    #print("\nTotal : "+str(cumulative_cost_goal//3600)+" hour "+str(int(cumulative_cost_goal%3600/60))+" minus")
+                else:
+                    str1+="\nTotal :"+str(cumulative_cost_goal)+"Baht"
+                    #print("\nTotal : %s Baht" % cumulative_cost_goal)
+                return str1
+            else:
+                return "not found"
+            
+def rescale():
+    for e in coordinates:
+        x,y=coordinates[e]
+        x=x*(WIDTH/890)
+        y=y*(HEIGHT/548)
+        coordinates[e]=[x,y]
+        #print(e,x,y)
+def getDistance(a,b):
+    x1,y1=a
+    x2,y2=b
+    return int(math.sqrt(math.pow(x1-x2,2)+math.pow(y1-y2,2)))
+def updateHeuristics(stop):
+    h = {stop:0}
+    for e in coordinates:
+        if e != stop:
+            h[e]=getDistance(coordinates[e],coordinates[stop])
+        else:
+            h[e]=0
+    return h
+def getHeuristics(s):
+    return int((Heuristics[s]-Heuristics_min)*((price_max-price_min)/(Heuristics_max-Heuristics_min))+price_min)
+    #return Heuristics[s]
+def find_max_min(time):
+    global Heuristics_min,Heuristics_max,price_min,price_max
+    for e in Heuristics:
+        if Heuristics[e] < Heuristics_min:
+                Heuristics_min = Heuristics[e]
+        if Heuristics[e] > Heuristics_max:
+                Heuristics_max = Heuristics[e]
+    for e in List_Station:
+        for i in List_Station[e].getDestination():
+            if i.getCost(time) < price_min:
+                price_min = i.getCost(time)
+            if i.getCost(time) > price_max:
+                price_max = i.getCost(time)
+
 ########## COMPLEXITY MEASUREMENT
 def complexityMeasurement(init,dest):
+    global Heuristics
     print("----- Uninform Search Algorithms -----\n")
     tracemalloc.start()
     start = time.time()
@@ -227,9 +320,74 @@ def complexityMeasurement(init,dest):
     tracemalloc.stop()
     print(f"** Time : {(stop - start)*1000} ms\n")
 
+    print("----- Heuristics Search Algorithms -----\n")
+    tracemalloc.start()
+    start = time.time()
+    Heuristics=updateHeuristics(dest)
+    find_max_min(True)
+    a_star_search(init,dest,Heuristics,True)
+    stop = time.time()
+    current, peak = tracemalloc.get_traced_memory()
+    print(f"Current Mem : {current / 1000} kB")
+    print(f"** Peak Mem : {peak / 1000} kB")
+    tracemalloc.stop()
+    print(f"** Time : {(stop - start)*1000} ms\n")
+
 
 
 #### Test Here <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+WIDTH=668
+HEIGHT=441
+coordinates = {'BKK' : [666,319],
+               'MIA' : [229,293],
+               'NRT' : [753,264],
+               'HND' : [744,255],
+               'PEK' : [694,243],
+               'ICN' : [716,250],
+               'PVG' : [707,269],
+               'XMN' : [703,287],
+               'TPE' : [711,292],
+               'HKG' : [694,297],
+               'MNL' : [711,324],
+               'CAN' : [679,283],
+               'CMB' : [613,342],
+               'MCT' : [561,297],
+               'AUH' : [548,292],
+               'DOH' : [537,288],
+               'KWI' : [532,287],
+               'IST' : [484,241],
+               'SVO' : [493,188], 
+               'HEL' : [473,171],
+               'VIE' : [454,218],
+               'FRA' : [442,210],
+               'ZRH' : [441,224],
+               'CDG' : [431,216],
+               'AMS' : [431,204],
+               'LHR' : [418,206],
+               'DUB' : [403,200],
+               'LIS' : [399,250],
+               'BOS' : [266,226],
+               'LGA' : [252,235],
+               'JFK' : [252,246],
+               'YYZ' : [238,226],
+               'DTW' : [224,223],
+               'ORD' : [234,206],
+               'ATL' : [223,264],
+               'DEN' : [183,246],
+               'IAH' : [192,278],
+               'DFW' : [191,264],
+               'LAS' : [154,258],
+               'LAX' : [142,264],
+               'SFO' : [132,250],
+               'SEA' : [142,225],
+               'YVR' : [137,213]
+}
+Heuristics={}
+price_min,price_max=9999999,0
+Heuristics_min,Heuristics_max=9999999,0
+rescale()
+
+
 complexityMeasurement("CDG","DFW")
 ############## <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 

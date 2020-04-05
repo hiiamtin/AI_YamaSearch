@@ -209,7 +209,6 @@ def bi_uniform_cost_search(start,stop,time):
                 return "Not Found :C"
             print(count)
 
-
 def drawStation(start,stop,times,color='red',tag='line'):
     if start in coordinates and stop in coordinates:
         x_start,y_start = coordinates[start]
@@ -246,7 +245,7 @@ def getHeuristics(stop):
     h = {stop:0}
     for e in coordinates:
         if e != stop:
-            h[e]=getDistance(coordinates[e],coordinates[stop])
+            h[e]=getDistance(coordinates[e],coordinates[stop])*10
     return h
 
 
@@ -473,7 +472,6 @@ error_pos = 20
 WIDTH=668
 HEIGHT=441
 canvas = Canvas(root, width = WIDTH, height = HEIGHT)
-rescale()
 
 img = Image.open("AIMap.PNG")
 img = img.resize((WIDTH, HEIGHT), Image.ANTIALIAS)
