@@ -270,7 +270,13 @@ def rescale():
 def getDistance(a,b):
     x1,y1=a
     x2,y2=b
-    return int(math.sqrt(math.pow(x1-x2,2)+math.pow(y1-y2,2)))
+    ans1 = int(math.sqrt(math.pow(x1-x2,2)+math.pow(y1-y2,2)))
+    if x1 > x2:
+        x = (WIDTH-x1) + x2
+    else:
+        x = x1 + (WIDTH-x2)
+    ans2 = int(math.sqrt(math.pow(x,2)+math.pow(y1-y2,2)))
+    return ans1 if ans1 < ans2 else ans2
 def updateHeuristics(stop):
     h = {stop:0}
     for e in coordinates:
@@ -280,7 +286,7 @@ def updateHeuristics(stop):
             h[e]=0
     return h
 def getHeuristics(s):
-    return int((Heuristics[s]-Heuristics_min)*((price_max-price_min)/(Heuristics_max-Heuristics_min))+price_min)
+    return int(((Heuristics[s]-Heuristics_min)*((price_max-price_min)/(Heuristics_max-Heuristics_min))+price_min)*0.9)
     #return Heuristics[s]
 def find_max_min(time):
     global Heuristics_min,Heuristics_max,price_min,price_max
@@ -302,7 +308,7 @@ def complexityMeasurement(init,dest):
     print("----- Uninform Search Algorithms -----\n")
     tracemalloc.start()
     start = time.time()
-    uniform_cost_search(init,dest,True)
+    print(uniform_cost_search(init,dest,True))
     stop = time.time()
     current, peak = tracemalloc.get_traced_memory()
     print(f"Current Mem : {current / 1000} kB")
@@ -312,7 +318,7 @@ def complexityMeasurement(init,dest):
 
     tracemalloc.start()
     start = time.time()
-    bi_uniform_cost_search(init,dest,True)
+    print(bi_uniform_cost_search(init,dest,True))
     stop = time.time()
     current, peak = tracemalloc.get_traced_memory()
     print(f"Current Mem : {current / 1000} kB")
@@ -325,7 +331,7 @@ def complexityMeasurement(init,dest):
     start = time.time()
     Heuristics=updateHeuristics(dest)
     find_max_min(True)
-    a_star_search(init,dest,Heuristics,True)
+    print(a_star_search(init,dest,Heuristics,True))
     stop = time.time()
     current, peak = tracemalloc.get_traced_memory()
     print(f"Current Mem : {current / 1000} kB")
@@ -387,7 +393,7 @@ price_min,price_max=9999999,0
 Heuristics_min,Heuristics_max=9999999,0
 rescale()
 
-
+#complexityMeasurement("BOS","MNL")
 complexityMeasurement("CDG","DFW")
 ############## <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
