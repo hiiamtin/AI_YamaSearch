@@ -1,7 +1,9 @@
 from Class import *
-import time,json,math
+import time
+import json
 from tkinter import *
 from tkinter import messagebox as mess
+
 from PIL import Image
 from PIL import ImageTk
 
@@ -209,6 +211,7 @@ def bi_uniform_cost_search(start,stop,time):
                 return "Not Found :C"
             print(count)
 
+
 def drawStation(start,stop,times,color='red',tag='line'):
     if start in coordinates and stop in coordinates:
         x_start,y_start = coordinates[start]
@@ -236,17 +239,8 @@ def rescale():
         x=x*(WIDTH/890)
         y=y*(HEIGHT/548)
         coordinates[e]=[x,y]
-        #print(e,x,y)
-def getDistance(a,b):
-    x1,y1=a
-    x2,y2=b
-    return int(math.sqrt(math.pow(x1-x2,2)+math.pow(y1-y2,2)))
-def getHeuristics(stop):
-    h = {stop:0}
-    for e in coordinates:
-        if e != stop:
-            h[e]=getDistance(coordinates[e],coordinates[stop])*10
-    return h
+        print(e,x,y)
+
 
 
 ##start_time = time.time()
@@ -271,7 +265,8 @@ def clicked():
         mess.showinfo("Title", "Please Choose Your Delay")
     elif selected.get() == 1:
         if btn['text'] == "Search":
-            btn['text'] = "Cancle"     
+            btn['text'] = "Cancle" 
+            btn['image']= photo_2
             la['text'] = "wait for Searching..."
             start_time = time.time()
             ans  = uniform_cost_search(txt.get(),txt2.get(),True)
@@ -280,12 +275,15 @@ def clicked():
             times2 = times1
             for i in allsearchgp:
                 message(times2,i)
+                #message3(times2,i)
                 times2+=times1
             else:
                 root.after(int(times2+times1),lambda: la3.config(text="ANSWER:"+ans+ "\nSearchTimes : "+str(endtime)+"ms"))
+                #root.after(int(times2+times1),lambda: la3_2.config(text="ANSWER:"+ans+ "\nSearchTimes : "+str(endtime)+"ms"))
                 allsearchgp.clear()
+
         elif btn['text'] == "Cancle":
-            print("Cancle")
+            btn['image']= photo
             for e in idt:
                 root.after_cancel(e)
             else: 
@@ -295,12 +293,12 @@ def clicked():
                 btn['text'] = 'Search'
                 idt.clear()
             canvas.delete('line')
+            canvas.delete('line2')
     elif selected.get() == 2 :
         if btn['text'] == "Search":
-            btn['text'] = "Cancle"     
+            btn['text'] = "Cancle" 
+            btn['image']= photo_2
             la['text'] = "wait for Searching..."
-            
-            print(getHeuristics(txt2.get()))
             start_time = time.time()
             ans = bi_uniform_cost_search(txt.get(),txt2.get(),True)
             endtime = (time.time() - start_time)*1000
@@ -308,18 +306,21 @@ def clicked():
             times2 = times1
             for i in allsearchgp:
                 message(times2,i)
+                #message3(times2,i)
                 times2+=times1
             else:
                 allsearchgp.clear()
             times2 = times1
             for i in allsearchgp2:
                 message2(times2,i)
+                #message4(times2,i)
                 times2+=times1
             else:
-                allsearchgp.clear()
+                allsearchgp2.clear()
                 root.after(times2,lambda: la3.config(text="ANSWER:"+ans + "\nSearchTimes : "+str(endtime)+"ms"))
+                #root.after(times2,lambda: la3_2.config(text="ANSWER:"+ans + "\nSearchTimes : "+str(endtime)+"ms"))
         elif btn['text'] == "Cancle":
-            print("Cancle")
+            btn['image']= photo
             for e in idt:
                 root.after_cancel(e)
             else:
@@ -330,7 +331,85 @@ def clicked():
                 idt.clear()
             canvas.delete('line')
             canvas.delete('line2')
-            
+def clicked_2():
+    if txt3.get() == "":
+        mess.showinfo("Title", "Please Choose Your Delay")
+    elif selected2.get() == 1:
+        if btn['text'] == "Search":
+            btn['text'] = "Cancle" 
+            btn['image']= photo_2
+            la_2['text'] = "wait for Searching..."
+            start_time = time.time()
+            ans  = uniform_cost_search(txt.get(),txt2.get(),True)
+            endtime = (time.time() - start_time)*1000
+            times1 = int(txt3.get())
+            times2 = times1
+            for i in allsearchgp:
+                message3(times2,i)
+                times2+=times1
+            else:
+                root.after(int(times2+times1),lambda: la3_2.config(text="ANSWER:"+ans+ "\nSearchTimes : "+str(endtime)+"ms"))
+                allsearchgp.clear()
+        elif btn['text'] == "Cancle":
+            btn['image']= photo
+            for e in idt:
+                root.after_cancel(e)
+            else: 
+                la_2['text'] = "Please Click for Search."
+                la2_2['text'] = ""
+                la3_2['text'] = ""
+                btn['text'] = 'Search'
+                idt.clear()
+            canvas.delete('line')
+            canvas.delete('line2')
+    elif selected2.get() == 2 :
+        if btn['text'] == "Search":  
+            btn['text'] = "Cancle" 
+            btn['image']= photo_2
+            la_2['text'] = "wait for Searching..."
+            start_time = time.time()
+            ans = bi_uniform_cost_search(txt.get(),txt2.get(),True)
+            endtime = (time.time() - start_time)*1000
+            times1 = int(txt3.get())
+            times2 = times1
+            for i in allsearchgp:
+                message3(times2,i)
+                times2+=times1
+            else:
+                allsearchgp.clear()
+            times2 = times1
+            for i in allsearchgp2:
+                message4(times2,i)
+                times2+=times1
+            else:
+                allsearchgp2.clear()
+                root.after(times2,lambda: la3_2.config(text="ANSWER:"+ans + "\nSearchTimes : "+str(endtime)+"ms"))
+        elif btn['text'] == "Cancle":
+            btn['image']= photo
+            for e in idt:
+                root.after_cancel(e)
+            else:
+                la_2['text'] = "Please Click for Search."
+                la2_2['text'] = ""
+                la3_2['text'] = ""
+                btn['text'] = 'Search'
+                idt.clear()
+            canvas.delete('line')
+            canvas.delete('line2')
+def Call_clicked():
+    if 0< selected.get() <=2 and 0< selected2.get() <=2 :
+        if btn['text']  == 'Search':
+            clicked()
+            btn['text']  = 'Search'
+            clicked_2()
+        else:
+            clicked()
+            btn['text']  = 'Cancle'
+            clicked_2()
+    elif  0< selected.get() <=2:
+        clicked()
+    elif  0< selected2.get() <=2:    
+        clicked_2()
 def message(times,i):
     root.after(times,lambda: canvas.delete('line'))
     idd=root.after(times,lambda: la.config(text=i))
@@ -359,43 +438,92 @@ def message2(times,i):
             prev=l[e]
             idt.append(idd2)
     idt.append(idd)
+def message3(times,i):
+    root.after(times,lambda: canvas.delete('line'))
+    idd=root.after(times,lambda: la_2.config(text=i))
+    print(i.split("->"))
+    l = i.split("->")
+    prev=None
+    for e in range(len(l)-1):
+        if prev == None:
+            prev = l[e]
+        else:
+            idd2=drawStation(prev,l[e],times)     
+            prev=l[e]
+            idt.append(idd2)
+    idt.append(idd)
+def message4(times,i):
+    root.after(times,lambda: canvas.delete('line2'))
+    idd=root.after(times,lambda: la2_2.config(text=i))
+    print(i.split("->"))
+    l = i.split("->")
+    prev=None
+    for e in range(len(l)-1):
+        if prev == None:
+            prev = l[e]
+        else:
+            idd2=drawStation(prev,l[e],times,'blue','line2')     
+            prev=l[e]
+            idt.append(idd2)
+    idt.append(idd)
+
+
 
 root = Tk()
 root.title("AI YamaSearch")
 root.geometry('900x800')
 home = Frame(root)
 
+
+img_can = Image.open('picture/clear.png')
+img_can = img_can.resize((200,120), Image.ANTIALIAS)
+photo_2 = ImageTk.PhotoImage(img_can)
+
 allsearchgp = []
 allsearchgp2 = []
 
 label1 = Label(root,text= "AI YamaSearch",font = ("Arial",20))
-start_text = Label(root,text= "Start :", font = ("Arial",18))
-des_text = Label(root,text= "Destination :", font = ("Arial",18))
-label1.grid(row=0,column=1, columnspan = 6)
-la = Label(root, text = "Please Click for Search.", font = ("Arial Bold",12))
-la.grid(row = 4 ,column =1 ,columnspan = 50)
-la2 = Label(root, text = "", font = ("Arial Bold",12))
-la2.grid(row = 5 ,column =1 ,columnspan = 50)
-la3 = Label(root, text = "", font = ("Arial Bold",12))
-la3.grid(row = 6 ,column =1 ,columnspan = 50)
-delay_text = Label(root, text = "Delay(ms):", font = ("Arial Bold",12))
-delay_text.grid(row = 2,column = 5)
-btn = Button(root, text = "Search", bg = "black", fg = "red", command = clicked)
+label1.grid(row=0,column=6, columnspan = 4)
 
+la = Label(root, text = "Please Click for Search.", font = ("Arial Bold",12))
+la.grid(row =  6 ,column =0 ,columnspan = 7)
+la2 = Label(root, text = "", font = ("Arial Bold",12))
+la2.grid(row = 7 ,column =0 ,columnspan = 7)
+la3 = Label(root, text = "", font = ("Arial Bold",12))
+la3.grid(row = 8 ,column =0 ,columnspan = 7)
+
+la_2 = Label(root, text = "Please Click for Search.", font = ("Arial Bold",12))
+la_2.grid(row =  6 ,column =13 ,columnspan = 7)
+la2_2 = Label(root, text = "", font = ("Arial Bold",12))
+la2_2.grid(row = 7 ,column =13 ,columnspan = 7)
+la3_2 = Label(root, text = "", font = ("Arial Bold",12))
+la3_2.grid(row = 8 ,column =13 ,columnspan = 7)
+
+img = Image.open('picture/search.png')
+img = img.resize((200,120), Image.ANTIALIAS)
+photo = ImageTk.PhotoImage(img)
+btn = Button(root, text = "Search" ,image = photo, command = Call_clicked,borderwidth=0)
+
+btn.grid(column = 7, row = 8, columns = 2)
 
 # get input using entry class
 
 txt =  Entry(root, width = 10, font = ("Arial",18))
 txt2 = Entry(root, width = 10, font = ("Arial",18))
-txt3 = Entry(root, width = 10, font = ("Arial",12))
+txt3 = Entry(root, width = 10, font = ("Arial",18))
 
 # use the grid function as usual to add it to the root
+start_text = Label(root,text= "Start :", font = ("Arial",18))
+start_text.grid(column = 4, row = 5 ,  columnspan = 5)
+txt.grid(column = 6, row = 5)
 
-txt.grid(column = 3, row = 3)
-start_text.grid(column = 2, row = 3)
-des_text.grid(column = 4, row = 3)
-txt2.grid(column = 5, row = 3)
-txt3.grid(column = 6, row = 2)
+des_text = Label(root,text= "Destination :", font = ("Arial",18))
+des_text.grid(column = 7, row = 5)
+txt2.grid(column = 8, row = 5)
+
+delay_text = Label(root, text = "Delay(ms):", font = ("Arial",18))
+delay_text.grid(column = 9,row = 5,columnspan = 2)
+txt3.grid(column = 11, row = 5,columnspan = 2)
 
 
 
@@ -404,21 +532,28 @@ txt3.grid(column = 6, row = 2)
 txt.focus()
 
 selected = IntVar()
-
 rad1 = Radiobutton(root,text='Uniform_Cost_Search', value=1, variable=selected ,font = ("Arial",12))
-
 rad2 = Radiobutton(root,text='Bi_Direction_Uniform_Cost_Search', value=2, variable=selected, font = ("Arial",12))
+rad3 = Radiobutton(root,text='A*_Cost_Search', value=3, variable=selected, font = ("Arial",12))
+
+selected2 = IntVar()
+rad1_2 = Radiobutton(root,text='Uniform_Cost_Search', value=1, variable=selected2 ,font = ("Arial",12))
+rad2_2 = Radiobutton(root,text='Bi_Direction_Uniform_Cost_Search', value=2, variable=selected2, font = ("Arial",12))
+rad3_2 = Radiobutton(root,text='A*_Cost_Search', value=3, variable=selected2, font = ("Arial",12))
+# bg_img = Image.open('picture/bg.jpg')
+# photo_bg = ImageTk.PhotoImage(bg_img)
+# background_label = Label( image=photo_bg)
+# background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
 
-btn.grid(column = 6, row = 3)
+rad1.grid(column = 4, row = 2)
+rad2.grid(column = 5, row = 2)
+rad3.grid(column = 6, row = 2)
 
 
-rad1.grid(column = 3, row = 2)
-rad2.grid(column = 4, row = 2)
-
-
-
-
+rad1_2.grid(column = 9, row = 2,columnspan = 4)
+rad2_2.grid(column = 13, row = 2)
+rad3_2.grid(column = 14, row = 2)
 
 # Set the value for Spinbox
 coordinates = {'BKK' : [666,319],
@@ -465,19 +600,32 @@ coordinates = {'BKK' : [666,319],
                'SEA' : [142,225],
                'YVR' : [137,213]
 }
-Heuristics={}
-
 error_pos = 20
+
 #890,548
 WIDTH=668
 HEIGHT=441
 canvas = Canvas(root, width = WIDTH, height = HEIGHT)
-
+rescale()
 img = Image.open("AIMap.PNG")
 img = img.resize((WIDTH, HEIGHT), Image.ANTIALIAS)
 img = ImageTk.PhotoImage(img)
 canvas.create_image(20,20, anchor=NW, image=img)
 canvas.grid(column = 1, row = 1, columnspan = 6)
+#tex.delete('1.0', END)
 
+canvas2 = Canvas(root, width = WIDTH, height = HEIGHT)
+# rescale()
+# img = Image.open("AIMap.PNG")
+# img = img.resize((WIDTH, HEIGHT), Image.ANTIALIAS)
+# img = ImageTk.PhotoImage(img)
+canvas2.create_image(20,20, anchor=NW, image=img)
+canvas2.grid(column = 9, row = 1, columnspan = 16)
+
+# canvas = Canvas(root, width = 890, height = 548)  
+# img = PhotoImage(file="AIMap.PNG")      
+# canvas.create_image(20,20, anchor=NW, image=img)  
+
+canvas.grid(column = 1, row = 1, columnspan = 6)
 #canvas.create_line(0,0,100,100,fill ='red')
 root.mainloop()
