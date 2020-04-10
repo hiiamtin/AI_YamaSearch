@@ -211,7 +211,6 @@ def bi_uniform_cost_search(start,stop,time):
                 return "Not Found :C"
             print(count)
 
-
 def drawStation(start,stop,times,color='red',tag='line'):
     if start in coordinates and stop in coordinates:
         x_start,y_start = coordinates[start]
@@ -483,7 +482,7 @@ allsearchgp = []
 allsearchgp2 = []
 
 label1 = Label(root,text= "AI YamaSearch",font = ("Arial",20))
-label1.grid(row=0,column=6, columnspan = 4)
+label1.grid(row=0,column=6, columnspan = 6)
 
 la = Label(root, text = "Please Click for Search.", font = ("Arial Bold",12))
 la.grid(row =  6 ,column =0 ,columnspan = 7)
@@ -493,11 +492,11 @@ la3 = Label(root, text = "", font = ("Arial Bold",12))
 la3.grid(row = 8 ,column =0 ,columnspan = 7)
 
 la_2 = Label(root, text = "Please Click for Search.", font = ("Arial Bold",12))
-la_2.grid(row =  6 ,column =13 ,columnspan = 7)
+la_2.grid(row =  6 ,column =9 ,columnspan = 22)
 la2_2 = Label(root, text = "", font = ("Arial Bold",12))
-la2_2.grid(row = 7 ,column =13 ,columnspan = 7)
+la2_2.grid(row = 7 ,column =9 ,columnspan = 22)
 la3_2 = Label(root, text = "", font = ("Arial Bold",12))
-la3_2.grid(row = 8 ,column =13 ,columnspan = 7)
+la3_2.grid(row = 8 ,column =9 ,columnspan = 22)
 
 img = Image.open('picture/search.png')
 img = img.resize((200,120), Image.ANTIALIAS)
