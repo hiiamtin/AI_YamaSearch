@@ -211,11 +211,16 @@ def bi_uniform_cost_search(start,stop,time):
                 return "Not Found :C"
             print(count)
 
-def drawStation(start,stop,times,color='red',tag='line'):
+def drawStation(map,start,stop,times,color='red',tag='line'):
     if start in coordinates and stop in coordinates:
         x_start,y_start = coordinates[start]
         x_stop,y_stop = coordinates[stop]
-        idd=root.after(times,lambda: canvas.create_line(x_start+error_pos,y_start+error_pos,x_stop+error_pos,y_stop+error_pos,fill = color,tag=tag))
+        if map == 1 :
+            idd = root.after(times,lambda: canvas.create_line(x_start+error_pos,y_start+error_pos,x_stop+error_pos,y_stop+error_pos,fill = color,tag=tag))
+        elif map ==2:
+            idd = root.after(times,lambda: canvas2.create_line(x_start+error_pos,y_start+error_pos,x_stop+error_pos,y_stop+error_pos,fill = color,tag=tag))
+        else :
+            print("error")
     else:
         print("Error!!")
         idd=None
@@ -332,7 +337,8 @@ def clicked():
             canvas.delete('line2')
 def clicked_2():
     if txt3.get() == "":
-        mess.showinfo("Title", "Please Choose Your Delay")
+        #mess.showinfo("Title", "Please Choose Your Delay")
+        print()
     elif selected2.get() == 1:
         if btn['text'] == "Search":
             btn['text'] = "Cancle" 
@@ -359,8 +365,8 @@ def clicked_2():
                 la3_2['text'] = ""
                 btn['text'] = 'Search'
                 idt.clear()
-            canvas.delete('line')
-            canvas.delete('line2')
+            canvas2.delete('line')
+            canvas2.delete('line2')
     elif selected2.get() == 2 :
         if btn['text'] == "Search":  
             btn['text'] = "Cancle" 
@@ -393,8 +399,8 @@ def clicked_2():
                 la3_2['text'] = ""
                 btn['text'] = 'Search'
                 idt.clear()
-            canvas.delete('line')
-            canvas.delete('line2')
+            canvas2.delete('line')
+            canvas2.delete('line2')
 def Call_clicked():
     if 0< selected.get() <=2 and 0< selected2.get() <=2 :
         if btn['text']  == 'Search':
@@ -419,7 +425,7 @@ def message(times,i):
         if prev == None:
             prev = l[e]
         else:
-            idd2=drawStation(prev,l[e],times)     
+            idd2=drawStation(1,prev,l[e],times)     
             prev=l[e]
             idt.append(idd2)
     idt.append(idd)
@@ -433,12 +439,12 @@ def message2(times,i):
         if prev == None:
             prev = l[e]
         else:
-            idd2=drawStation(prev,l[e],times,'blue','line2')     
+            idd2=drawStation(1,prev,l[e],times,'blue','line2')     
             prev=l[e]
             idt.append(idd2)
     idt.append(idd)
 def message3(times,i):
-    root.after(times,lambda: canvas.delete('line'))
+    root.after(times,lambda: canvas2.delete('line'))
     idd=root.after(times,lambda: la_2.config(text=i))
     print(i.split("->"))
     l = i.split("->")
@@ -447,12 +453,12 @@ def message3(times,i):
         if prev == None:
             prev = l[e]
         else:
-            idd2=drawStation(prev,l[e],times)     
+            idd2=drawStation(2,prev,l[e],times)     
             prev=l[e]
             idt.append(idd2)
     idt.append(idd)
 def message4(times,i):
-    root.after(times,lambda: canvas.delete('line2'))
+    root.after(times,lambda: canvas2.delete('line2'))
     idd=root.after(times,lambda: la2_2.config(text=i))
     print(i.split("->"))
     l = i.split("->")
@@ -461,7 +467,7 @@ def message4(times,i):
         if prev == None:
             prev = l[e]
         else:
-            idd2=drawStation(prev,l[e],times,'blue','line2')     
+            idd2=drawStation(2,prev,l[e],times,'blue','line2')     
             prev=l[e]
             idt.append(idd2)
     idt.append(idd)
