@@ -3,7 +3,8 @@ import time
 import json
 from tkinter import *
 from tkinter import messagebox as mess
-
+import math
+import tracemalloc
 from PIL import Image
 from PIL import ImageTk
 
@@ -272,9 +273,12 @@ def clicked():
             btn['text'] = "Cancle" 
             btn['image']= photo_2
             la['text'] = "wait for Searching..."
+            tracemalloc.start()
             start_time = time.time()
             ans  = uniform_cost_search(txt.get(),txt2.get(),True)
             endtime = (time.time() - start_time)*1000
+            current, peak = tracemalloc.get_traced_memory()
+            tracemalloc.stop()
             times1 = int(txt3.get())
             times2 = times1
             for i in allsearchgp:
@@ -283,6 +287,7 @@ def clicked():
                 times2+=times1
             else:
                 root.after(int(times2+times1),lambda: la3.config(text="ANSWER:"+ans+ "\nSearchTimes : "+str(endtime)+"ms"))
+                root.after(int(times2+times1),lambda: la4.config(text=f"Current Mem : {current / 1000} kB \n ** Peak Mem : {peak / 1000} kB"))
                 #root.after(int(times2+times1),lambda: la3_2.config(text="ANSWER:"+ans+ "\nSearchTimes : "+str(endtime)+"ms"))
                 allsearchgp.clear()
 
@@ -294,6 +299,7 @@ def clicked():
                 la['text'] = "Please Click for Search."
                 la2['text'] = ""
                 la3['text'] = ""
+                la4['text'] = ""
                 btn['text'] = 'Search'
                 idt.clear()
             canvas.delete('line')
@@ -303,9 +309,12 @@ def clicked():
             btn['text'] = "Cancle" 
             btn['image']= photo_2
             la['text'] = "wait for Searching..."
+            tracemalloc.start()
             start_time = time.time()
             ans = bi_uniform_cost_search(txt.get(),txt2.get(),True)
             endtime = (time.time() - start_time)*1000
+            current, peak = tracemalloc.get_traced_memory()
+            tracemalloc.stop()
             times1 = int(txt3.get())
             times2 = times1
             for i in allsearchgp:
@@ -320,8 +329,11 @@ def clicked():
                 #message4(times2,i)
                 times2+=times1
             else:
-                allsearchgp2.clear()
                 root.after(times2,lambda: la3.config(text="ANSWER:"+ans + "\nSearchTimes : "+str(endtime)+"ms"))
+                root.after(int(times2+times1),lambda: la4.config(text=f"Current Mem : {current / 1000} kB \n ** Peak Mem : {peak / 1000} kB"))
+                allsearchgp2.clear()
+                allsearchgp.clear()
+                
                 #root.after(times2,lambda: la3_2.config(text="ANSWER:"+ans + "\nSearchTimes : "+str(endtime)+"ms"))
         elif btn['text'] == "Cancle":
             btn['image']= photo
@@ -331,6 +343,44 @@ def clicked():
                 la['text'] = "Please Click for Search."
                 la2['text'] = ""
                 la3['text'] = ""
+                la4['text'] = ""
+                btn['text'] = 'Search'
+                idt.clear()
+            canvas.delete('line')
+            canvas.delete('line2')
+    elif selected.get() == 3 :
+        if btn['text'] == "Search":
+            btn['text'] = "Cancle" 
+            btn['image']= photo_2
+            la['text'] = "wait for Searching..."
+            tracemalloc.start()
+            start_time = time.time()
+            global Heuristics
+            Heuristics =updateHeuristics(txt2.get())
+            find_max_min(True)
+            ans  = a_star_search(txt.get(),txt2.get(),Heuristics,True)
+            endtime = (time.time() - start_time)*1000
+            current, peak = tracemalloc.get_traced_memory()
+            tracemalloc.stop()
+            times1 = int(txt3.get())
+            times2 = times1
+            for i in allsearchgp:
+                message(times2,i)
+                #message3(times2,i)
+                times2+=times1
+            else:
+                root.after(int(times2+times1),lambda: la3.config(text="ANSWER:"+ans+ "\nSearchTimes : "+str(endtime)+"ms"))
+                root.after(int(times2+times1),lambda: la4.config(text=f"Current Mem : {current / 1000} kB \n ** Peak Mem : {peak / 1000} kB"))
+                allsearchgp.clear()
+        elif btn['text'] == "Cancle":
+            btn['image']= photo
+            for e in idt:
+                root.after_cancel(e)
+            else: 
+                la['text'] = "Please Click for Search."
+                la2['text'] = ""
+                la3['text'] = ""
+                la4['text'] = ""
                 btn['text'] = 'Search'
                 idt.clear()
             canvas.delete('line')
@@ -344,9 +394,12 @@ def clicked_2():
             btn['text'] = "Cancle" 
             btn['image']= photo_2
             la_2['text'] = "wait for Searching..."
+            tracemalloc.start()
             start_time = time.time()
             ans  = uniform_cost_search(txt.get(),txt2.get(),True)
             endtime = (time.time() - start_time)*1000
+            current, peak = tracemalloc.get_traced_memory()
+            tracemalloc.stop()
             times1 = int(txt3.get())
             times2 = times1
             for i in allsearchgp:
@@ -354,6 +407,7 @@ def clicked_2():
                 times2+=times1
             else:
                 root.after(int(times2+times1),lambda: la3_2.config(text="ANSWER:"+ans+ "\nSearchTimes : "+str(endtime)+"ms"))
+                root.after(int(times2+times1),lambda: la4_2.config(text=f"Current Mem : {current / 1000} kB \n ** Peak Mem : {peak / 1000} kB"))
                 allsearchgp.clear()
         elif btn['text'] == "Cancle":
             btn['image']= photo
@@ -363,6 +417,7 @@ def clicked_2():
                 la_2['text'] = "Please Click for Search."
                 la2_2['text'] = ""
                 la3_2['text'] = ""
+                la4_2['text'] = ""
                 btn['text'] = 'Search'
                 idt.clear()
             canvas2.delete('line')
@@ -372,9 +427,12 @@ def clicked_2():
             btn['text'] = "Cancle" 
             btn['image']= photo_2
             la_2['text'] = "wait for Searching..."
+            tracemalloc.start()
             start_time = time.time()
             ans = bi_uniform_cost_search(txt.get(),txt2.get(),True)
             endtime = (time.time() - start_time)*1000
+            current, peak = tracemalloc.get_traced_memory()
+            tracemalloc.stop()
             times1 = int(txt3.get())
             times2 = times1
             for i in allsearchgp:
@@ -387,8 +445,10 @@ def clicked_2():
                 message4(times2,i)
                 times2+=times1
             else:
-                allsearchgp2.clear()
                 root.after(times2,lambda: la3_2.config(text="ANSWER:"+ans + "\nSearchTimes : "+str(endtime)+"ms"))
+                root.after(int(times2+times1),lambda: la4_2.config(text=f"Current Mem : {current / 1000} kB \n ** Peak Mem : {peak / 1000} kB"))
+                allsearchgp2.clear()
+                allsearchgp.clear()
         elif btn['text'] == "Cancle":
             btn['image']= photo
             for e in idt:
@@ -397,12 +457,53 @@ def clicked_2():
                 la_2['text'] = "Please Click for Search."
                 la2_2['text'] = ""
                 la3_2['text'] = ""
+                la4_2['text'] = ""
+                btn['text'] = 'Search'
+                idt.clear()
+            canvas2.delete('line')
+            canvas2.delete('line2')
+    elif selected2.get() == 3 :
+        if btn['text'] == "Search":
+            btn['text'] = "Cancle" 
+            btn['image']= photo_2
+            la['text'] = "wait for Searching..."
+
+            tracemalloc.start()
+            
+            start_time = time.time()         
+            global Heuristics
+            Heuristics =updateHeuristics(txt2.get())
+            find_max_min(True)
+            ans  = a_star_search(txt.get(),txt2.get(),Heuristics,True)
+            endtime = (time.time() - start_time)*1000
+
+            current, peak = tracemalloc.get_traced_memory()
+            tracemalloc.stop()
+            
+            times1 = int(txt3.get())
+            times2 = times1
+            for i in allsearchgp:
+                message3(times2,i)
+                times2+=times1
+            else:
+                root.after(int(times2+times1),lambda: la3_2.config(text="ANSWER:"+ans+ "\nSearchTimes : "+str(endtime)+"ms"))
+                root.after(int(times2+times1),lambda: la4_2.config(text=f"Current Mem : {current / 1000} kB \n ** Peak Mem : {peak / 1000} kB"))
+                allsearchgp.clear()
+        elif btn['text'] == "Cancle":
+            btn['image']= photo
+            for e in idt:
+                root.after_cancel(e)
+            else: 
+                la_2['text'] = "Please Click for Search."
+                la2_2['text'] = ""
+                la3_2['text'] = ""
+                la4_2['text'] = ""
                 btn['text'] = 'Search'
                 idt.clear()
             canvas2.delete('line')
             canvas2.delete('line2')
 def Call_clicked():
-    if 0< selected.get() <=2 and 0< selected2.get() <=2 :
+    if 0< selected.get() <=3 and 0< selected2.get() <=3 :
         if btn['text']  == 'Search':
             clicked()
             btn['text']  = 'Search'
@@ -411,9 +512,9 @@ def Call_clicked():
             clicked()
             btn['text']  = 'Cancle'
             clicked_2()
-    elif  0< selected.get() <=2:
+    elif  0< selected.get() <=3:
         clicked()
-    elif  0< selected2.get() <=2:    
+    elif  0< selected2.get() <=3:    
         clicked_2()
 def message(times,i):
     root.after(times,lambda: canvas.delete('line'))
@@ -472,8 +573,107 @@ def message4(times,i):
             idt.append(idd2)
     idt.append(idd)
 
+def a_star_search(start,stop,Heuristics,time):
+    if len(Heuristics)==0:
+        return "Error: Heuristics is empty!!"
+    elif start not in List_Station or stop not in List_Station:
+        return "Error: key_node_start'%s' or key_node_goal'%s' not exists!!"%(start,stop)
+    else:
+        if start == stop:
+            return"Finish: key_node_start'%s' == key_node_goal'%s' "%(start,stop)
+        else:
+            queue = Queue()
+            father_node = {start:[]}
+            keySuccessors = List_Station[start].getDestination()
+            for keySuccessor in keySuccessors:
+                cost_node = keySuccessor.getCost(time)
+                priority = cost_node+getHeuristics(keySuccessor.getName())
+                #print(keySuccessor.getName(),cost_node,getHeuristics(keySuccessor.getName()),priority)
+                queue.insert(father_node,(keySuccessor,cost_node),priority)
+
+            reached_goal,cumulative_cost_goal =False,0
+            count=0
+            while not queue.is_empty():
+                count+=1
+                l = queue.remove()
+                keyCurrent , cost_node = l[-1]
+                father_node = l[0]
+                #print(father_node,"->",keyCurrent,cost_node)
+                path_node = father_node.copy()
+                path_node[keyCurrent.getName()]=[str(keyCurrent.getBestAirline(time))]
+                #print(path_node)
+                update_gui(path_node)
+
+                if keyCurrent.getName() == stop:
+                    reached_goal = True
+                    cumulative_cost_goal = cost_node
+                    break
+                keySuccessors = List_Station[keyCurrent.getName()].getDestination()
+                if keySuccessors:
+                    for keySuccessor in keySuccessors:
+                        if not keySuccessor.getName() in father_node:
+                            cumulative_cost_goal = keySuccessor.getCost(time)+cost_node
+                            priority = cumulative_cost_goal+getHeuristics(keySuccessor.getName())
+                            queue.insert(path_node,(keySuccessor,cumulative_cost_goal),priority)
+
+            if reached_goal:
+                print(">>> A* Search ; loop =",count)
+                str1 = ""
+                for e in path_node:
+                    str1+=e+str(path_node[e])+"->"
+                    #print(e+str(path_node[e])+"->",end="")
+                if time:
+                    str1+="\nTotal : "+str(cumulative_cost_goal//3600)+" hour "+str(int(cumulative_cost_goal%3600/60))+" minus"
+                    #print("\nTotal : "+str(cumulative_cost_goal//3600)+" hour "+str(int(cumulative_cost_goal%3600/60))+" minus")
+                else:
+                    str1+="\nTotal :"+str(cumulative_cost_goal)+"Baht"
+                    #print("\nTotal : %s Baht" % cumulative_cost_goal)
+                return str1
+            else:
+                return "not found"    
+def getDistance(a,b):
+    x1,y1=a
+    x2,y2=b
+    ans1 = int(math.sqrt(math.pow(x1-x2,2)+math.pow(y1-y2,2)))
+    if x1 > x2:
+        x = (WIDTH-x1) + x2
+    else:
+        x = x1 + (WIDTH-x2)
+    ans2 = int(math.sqrt(math.pow(x,2)+math.pow(y1-y2,2)))
+    return ans1 if ans1 < ans2 else ans2
+def updateHeuristics(stop):
+    h = {stop:0}
+    for e in coordinates:
+        if e != stop:
+            h[e]=getDistance(coordinates[e],coordinates[stop])
+        else:
+            h[e]=0
+    return h
+def getHeuristics(s):
+    return int(((Heuristics[s]-Heuristics_min)*((price_max-price_min)/(Heuristics_max-Heuristics_min))+price_min)*0.9)
+    #return Heuristics[s]
+def find_max_min(time):
+    global Heuristics_min,Heuristics_max,price_min,price_max
+    price_min,price_max=9999999,0
+    Heuristics_min,Heuristics_max=9999999,0
+    for e in Heuristics:
+        if Heuristics[e] < Heuristics_min:
+                Heuristics_min = Heuristics[e]
+        if Heuristics[e] > Heuristics_max:
+                Heuristics_max = Heuristics[e]
+    for e in List_Station:
+        for i in List_Station[e].getDestination():
+            if i.getCost(time) < price_min:
+                price_min = i.getCost(time)
+            if i.getCost(time) > price_max:
+                price_max = i.getCost(time)
 
 
+
+
+
+#####################################################################################################################################################################
+#GUI
 root = Tk()
 root.title("AI YamaSearch")
 root.geometry('900x800')
@@ -496,6 +696,8 @@ la2 = Label(root, text = "", font = ("Arial Bold",12))
 la2.grid(row = 7 ,column =0 ,columnspan = 7)
 la3 = Label(root, text = "", font = ("Arial Bold",12))
 la3.grid(row = 8 ,column =0 ,columnspan = 7)
+la4 = Label(root, text = "", font = ("Arial Bold",12))
+la4.grid(row = 9 ,column =0 ,columnspan = 7)
 
 la_2 = Label(root, text = "Please Click for Search.", font = ("Arial Bold",12))
 la_2.grid(row =  6 ,column =9 ,columnspan = 22)
@@ -503,6 +705,8 @@ la2_2 = Label(root, text = "", font = ("Arial Bold",12))
 la2_2.grid(row = 7 ,column =9 ,columnspan = 22)
 la3_2 = Label(root, text = "", font = ("Arial Bold",12))
 la3_2.grid(row = 8 ,column =9 ,columnspan = 22)
+la4_2 = Label(root, text = "", font = ("Arial Bold",12))
+la4_2.grid(row = 9 ,column =9 ,columnspan = 22)
 
 img = Image.open('picture/search.png')
 img = img.resize((200,120), Image.ANTIALIAS)
@@ -607,6 +811,9 @@ coordinates = {'BKK' : [666,319],
 }
 error_pos = 20
 
+
+
+
 #890,548
 WIDTH=668
 HEIGHT=441
@@ -632,5 +839,10 @@ canvas2.grid(column = 9, row = 1, columnspan = 16)
 # canvas.create_image(20,20, anchor=NW, image=img)  
 
 canvas.grid(column = 1, row = 1, columnspan = 6)
-#canvas.create_line(0,0,100,100,fill ='red')
+#canvas.create_line(0,0,100,100,fill ='red').
+
+Heuristics={}
+price_min,price_max=9999999,0
+Heuristics_min,Heuristics_max=9999999,0
+
 root.mainloop()
