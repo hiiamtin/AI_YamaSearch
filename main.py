@@ -668,10 +668,6 @@ def find_max_min(time):
             if i.getCost(time) > price_max:
                 price_max = i.getCost(time)
 
-
-
-
-
 #####################################################################################################################################################################
 #GUI
 root = Tk()
@@ -688,7 +684,7 @@ allsearchgp = []
 allsearchgp2 = []
 
 label1 = Label(root,text= "AI YamaSearch",font = ("Arial",20))
-label1.grid(row=0,column=6, columnspan = 6)
+label1.grid(row=0,column=4, columnspan = 8)
 
 la = Label(root, text = "Please Click for Search.", font = ("Arial Bold",12))
 la.grid(row =  6 ,column =0 ,columnspan = 7)
@@ -700,20 +696,20 @@ la4 = Label(root, text = "", font = ("Arial Bold",12))
 la4.grid(row = 9 ,column =0 ,columnspan = 7)
 
 la_2 = Label(root, text = "Please Click for Search.", font = ("Arial Bold",12))
-la_2.grid(row =  6 ,column =9 ,columnspan = 22)
+la_2.grid(row =  6 ,column =7 ,columnspan = 22)
 la2_2 = Label(root, text = "", font = ("Arial Bold",12))
-la2_2.grid(row = 7 ,column =9 ,columnspan = 22)
+la2_2.grid(row = 7 ,column =7 ,columnspan = 22)
 la3_2 = Label(root, text = "", font = ("Arial Bold",12))
-la3_2.grid(row = 8 ,column =9 ,columnspan = 22)
+la3_2.grid(row = 8 ,column =7 ,columnspan = 22)
 la4_2 = Label(root, text = "", font = ("Arial Bold",12))
-la4_2.grid(row = 9 ,column =9 ,columnspan = 22)
+la4_2.grid(row = 9 ,column =7 ,columnspan = 22)
 
 img = Image.open('picture/search.png')
 img = img.resize((200,120), Image.ANTIALIAS)
 photo = ImageTk.PhotoImage(img)
 btn = Button(root, text = "Search" ,image = photo, command = Call_clicked,borderwidth=0)
 
-btn.grid(column = 7, row = 8, columns = 2)
+btn.grid(column = 4, row = 10, columns = 8)
 
 # get input using entry class
 
@@ -731,8 +727,8 @@ des_text.grid(column = 7, row = 5)
 txt2.grid(column = 8, row = 5)
 
 delay_text = Label(root, text = "Delay(ms):", font = ("Arial",18))
-delay_text.grid(column = 9,row = 5,columnspan = 2)
-txt3.grid(column = 11, row = 5,columnspan = 2)
+delay_text.grid(column = 8,row = 5,columnspan = 2)
+txt3.grid(column = 9, row = 5,columnspan = 2)
 
 
 
@@ -760,9 +756,9 @@ rad2.grid(column = 5, row = 2)
 rad3.grid(column = 6, row = 2)
 
 
-rad1_2.grid(column = 9, row = 2,columnspan = 4)
-rad2_2.grid(column = 13, row = 2)
-rad3_2.grid(column = 14, row = 2)
+rad1_2.grid(column = 7, row = 2,columnspan = 2)
+rad2_2.grid(column = 9, row = 2)
+rad3_2.grid(column = 10, row = 2)
 
 # Set the value for Spinbox
 coordinates = {'BKK' : [666,319],
@@ -832,7 +828,7 @@ canvas2 = Canvas(root, width = WIDTH, height = HEIGHT)
 # img = img.resize((WIDTH, HEIGHT), Image.ANTIALIAS)
 # img = ImageTk.PhotoImage(img)
 canvas2.create_image(20,20, anchor=NW, image=img)
-canvas2.grid(column = 9, row = 1, columnspan = 16)
+canvas2.grid(column = 7, row = 1, columnspan = 6)
 
 # canvas = Canvas(root, width = 890, height = 548)  
 # img = PhotoImage(file="AIMap.PNG")      
