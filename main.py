@@ -301,8 +301,10 @@ def clicked():
                 #message3(times2,i)
                 times2+=times1
             else:
-                root.after(int(times2+times1),lambda: la3.config(text="ANSWER:"+ans+ "\nSearchTimes : "+str(endtime)+"ms"))
-                root.after(int(times2+times1),lambda: la4.config(text=f"Current Mem : {current / 1000} kB \n ** Peak Mem : {peak / 1000} kB"))
+                idd=root.after(int(times2+times1),lambda: la3.config(text="ANSWER:"+ans+ "\nSearchTimes : "+str(endtime)+"ms"))
+                idd2=root.after(int(times2+times1),lambda: la4.config(text=f"Current Mem : {current / 1000} kB \n ** Peak Mem : {peak / 1000} kB"))
+                idt.append(idd)
+                idt.append(idd2)
                 #root.after(int(times2+times1),lambda: la3_2.config(text="ANSWER:"+ans+ "\nSearchTimes : "+str(endtime)+"ms"))
                 allsearchgp.clear()
 
@@ -344,8 +346,10 @@ def clicked():
                 #message4(times2,i)
                 times2+=times1
             else:
-                root.after(times2,lambda: la3.config(text="ANSWER:"+ans + "\nSearchTimes : "+str(endtime)+"ms"))
-                root.after(int(times2+times1),lambda: la4.config(text=f"Current Mem : {current / 1000} kB \n ** Peak Mem : {peak / 1000} kB"))
+                idd=root.after(times2,lambda: la3.config(text="ANSWER:"+ans + "\nSearchTimes : "+str(endtime)+"ms"))
+                idd2=root.after(int(times2+times1),lambda: la4.config(text=f"Current Mem : {current / 1000} kB \n ** Peak Mem : {peak / 1000} kB"))
+                idt.append(idd)
+                idt.append(idd2)
                 allsearchgp2.clear()
                 allsearchgp.clear()
                 
@@ -384,8 +388,10 @@ def clicked():
                 #message3(times2,i)
                 times2+=times1
             else:
-                root.after(int(times2+times1),lambda: la3.config(text="ANSWER:"+ans+ "\nSearchTimes : "+str(endtime)+"ms"))
-                root.after(int(times2+times1),lambda: la4.config(text=f"Current Mem : {current / 1000} kB \n ** Peak Mem : {peak / 1000} kB"))
+                idd=root.after(int(times2+times1),lambda: la3.config(text="ANSWER:"+ans+ "\nSearchTimes : "+str(endtime)+"ms"))
+                idd2=root.after(int(times2+times1),lambda: la4.config(text=f"Current Mem : {current / 1000} kB \n ** Peak Mem : {peak / 1000} kB"))
+                idt.append(idd)
+                idt.append(idd2)
                 allsearchgp.clear()
         elif btn['text'] == "Cancle":
             btn['image']= photo
@@ -421,8 +427,10 @@ def clicked_2():
                 message3(times2,i)
                 times2+=times1
             else:
-                root.after(int(times2+times1),lambda: la3_2.config(text="ANSWER:"+ans+ "\nSearchTimes : "+str(endtime)+"ms"))
-                root.after(int(times2+times1),lambda: la4_2.config(text=f"Current Mem : {current / 1000} kB \n ** Peak Mem : {peak / 1000} kB"))
+                idd=root.after(int(times2+times1),lambda: la3_2.config(text="ANSWER:"+ans+ "\nSearchTimes : "+str(endtime)+"ms"))
+                idd2=root.after(int(times2+times1),lambda: la4_2.config(text=f"Current Mem : {current / 1000} kB \n ** Peak Mem : {peak / 1000} kB"))
+                idt.append(idd)
+                idt.append(idd2)
                 allsearchgp.clear()
         elif btn['text'] == "Cancle":
             btn['image']= photo
@@ -460,8 +468,10 @@ def clicked_2():
                 message4(times2,i)
                 times2+=times1
             else:
-                root.after(times2,lambda: la3_2.config(text="ANSWER:"+ans + "\nSearchTimes : "+str(endtime)+"ms"))
-                root.after(int(times2+times1),lambda: la4_2.config(text=f"Current Mem : {current / 1000} kB \n ** Peak Mem : {peak / 1000} kB"))
+                idd=root.after(times2,lambda: la3_2.config(text="ANSWER:"+ans + "\nSearchTimes : "+str(endtime)+"ms"))
+                idd2=root.after(int(times2+times1),lambda: la4_2.config(text=f"Current Mem : {current / 1000} kB \n ** Peak Mem : {peak / 1000} kB"))
+                idt.append(idd)
+                idt.append(idd2)
                 allsearchgp2.clear()
                 allsearchgp.clear()
         elif btn['text'] == "Cancle":
@@ -501,8 +511,10 @@ def clicked_2():
                 message3(times2,i)
                 times2+=times1
             else:
-                root.after(int(times2+times1),lambda: la3_2.config(text="ANSWER:"+ans+ "\nSearchTimes : "+str(endtime)+"ms"))
-                root.after(int(times2+times1),lambda: la4_2.config(text=f"Current Mem : {current / 1000} kB \n ** Peak Mem : {peak / 1000} kB"))
+                idd=root.after(int(times2+times1),lambda: la3_2.config(text="ANSWER:"+ans+ "\nSearchTimes : "+str(endtime)+"ms"))
+                idd2=root.after(int(times2+times1),lambda: la4_2.config(text=f"Current Mem : {current / 1000} kB \n ** Peak Mem : {peak / 1000} kB"))
+                idt.append(idd)
+                idt.append(idd2)
                 allsearchgp.clear()
         elif btn['text'] == "Cancle":
             btn['image']= photo
