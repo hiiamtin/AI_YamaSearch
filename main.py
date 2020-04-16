@@ -64,9 +64,13 @@ def uniform_cost_search(start,stop,time):
             if reached_goal:
                 print("=uniform-cost-search-Found=")
                 str1 = ""
+                i=0
                 for e in path_node:
+                    if i==3:
+                        str1 += "\n"
                     str1+=e+str(path_node[e])+"->"
                     print(e+str(path_node[e])+"->",end="")
+                    i+=1
                 if time:
                     str1+="\nTotal : "+str(cumulative_cost_goal//3600)+" hour "+str(int(cumulative_cost_goal%3600/60))+" minus"
                     print("\nTotal : "+str(cumulative_cost_goal//3600)+" hour "+str(int(cumulative_cost_goal%3600/60))+" minus")
@@ -178,12 +182,17 @@ def bi_uniform_cost_search(start,stop,time):
             if downtext != "":
                 print("=Bi-Direct-Found=")
                 str1 = ""
+                i=0
+                j=0
                 if downtext  == "connect" :
                     update_gui(Dstart[downtext][0])
                     update_gui2(Dstop[downtext][0])
                     for e in Dstart[stop][0] :
+                        if i == 3:
+                            str1 += "\n"
                         str1+=e+""+str(Dstart[stop][0][e])+"->"
                         print(e+""+str(Dstart[stop][0][e])+"->",end=" ")
+                        i+=1
                     if time:
                         str1+="\nTotal : "+str(down//3600)+" hour "+str(int(down%3600/60))+" minus"
                         print("\nTotal : "+str(down//3600)+" hour "+str(int(down%3600/60))+" minus")
@@ -195,11 +204,17 @@ def bi_uniform_cost_search(start,stop,time):
                     update_gui2(Dstop[downtext][0])
                     reverseStop = [i for i in Dstop[downtext][0]]
                     for e in Dstart[downtext][0] :
+                        if j == 3:
+                            str1 += "\n"
                         str1+=e+""+str(Dstart[downtext][0][e])+"->"
                         print(e+""+str(Dstart[downtext][0][e])+"->",end="")
+                        j+=1
                     for e in range(len(reverseStop)-2,-1,-1):
+                        if j == 3:
+                            str1 += "\n"
                         str1 +=reverseStop[e]+""+str(Dstop[downtext][0][reverseStop[e+1]])
                         print(reverseStop[e]+""+str(Dstop[downtext][0][reverseStop[e+1]])+"->",end=' ')
+                        j+=1
                     if time:
                         str1+="\nTotal : "+str(down//3600)+" hour "+str(int(down%3600/60))+" minus"
                         print("\nTotal : "+str(down//3600)+" hour "+str(int(down%3600/60))+" minus")
@@ -618,10 +633,14 @@ def a_star_search(start,stop,Heuristics,time):
 
             if reached_goal:
                 print(">>> A* Search ; loop =",count)
+                i=0
                 str1 = ""
                 for e in path_node:
+                    if i == 3:
+                            str1 += "\n"
                     str1+=e+str(path_node[e])+"->"
                     #print(e+str(path_node[e])+"->",end="")
+                    i+=1
                 if time:
                     str1+="\nTotal : "+str(cumulative_cost_goal//3600)+" hour "+str(int(cumulative_cost_goal%3600/60))+" minus"
                     #print("\nTotal : "+str(cumulative_cost_goal//3600)+" hour "+str(int(cumulative_cost_goal%3600/60))+" minus")
